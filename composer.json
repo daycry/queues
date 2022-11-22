@@ -1,0 +1,65 @@
+{
+    "name": "daycry/queues",
+    "description": "Beanstalk queues for Codeigniter 4",
+    "homepage": "https://github.com/daycry/queues",
+    "authors":
+    [
+        {
+            "name": "daycry",
+            "homepage": "https://github.com/daycry",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+      "php": ">=7.4 || ^8.0",
+        "pda/pheanstalk": "^4.0"
+    },
+    "require-dev":
+    {
+        "codeigniter4/framework": "^4",
+        "codeigniter/coding-standard": "^1.1",
+        "fakerphp/faker": "^1.9",
+        "friendsofphp/php-cs-fixer": "3.6.*",
+        "mikey179/vfsstream": "^1.6",
+        "nexusphp/cs-config": "^3.3",
+        "nexusphp/tachycardia": "^1.0",
+        "phpstan/phpstan": "^1.7.1",
+        "phpunit/phpunit": "^9.1",
+        "rector/rector": "0.14.0"
+    },
+    "autoload":
+    {
+        "psr-4": {
+            "Daycry\\Queues\\": "src/"
+        },
+        "exclude-from-classmap": [
+            "**/Database/Migrations/**"
+        ]
+    },
+    "autoload-dev":
+    {
+        "psr-4":
+        {
+            "Tests\\": "tests/",
+            "Tests\\Support\\": "tests/_support"
+        }
+    },
+    "scripts": {
+        "cs-fixer": [ 
+            "php-cs-fixer fix --ansi --verbose src",
+            "php-cs-fixer fix --ansi --verbose tests"
+        ],
+        "cs": [
+            "vendor/bin/php-cs-fixer fix --verbose --ansi --dry-run --using-cache=no --diff src",
+            "vendor/bin/php-cs-fixer fix --verbose --ansi --dry-run --using-cache=no --diff tests"
+        ],
+        "test": [
+            "Composer\\Config::disableProcessTimeout",
+            "vendor/bin/phpunit"
+        ],
+        "phpcpd": [
+            "php phpcpd.phar src/"
+        ]
+    }
+}
