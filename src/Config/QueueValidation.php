@@ -11,11 +11,25 @@ class QueueValidation extends BaseValidation
     // --------------------------------------------------------------------
 
     public $dataQueue = [
-        'type' => 'required|string|in_list[class,command,shell,closure,event,url]',
+        'type' => 'required|string|in_list[classes,command,shell,closure,event,url,api]',
         'queue' => 'required|string',
         'delay' => 'required|integer|is_natural',
         'priority' => 'required|integer|is_natural',
         'ttr' => 'required|integer|is_natural',
+        'params' => 'required'
+    ];
+
+    public $classes = [
+        'class' => 'required',
+        'method' => 'required|string',
         'params' => 'if_exist|required'
+    ];
+
+    public $command = [
+        'command' => 'required|string'
+    ];
+
+    public $shell = [
+        'command' => 'required|string'
     ];
 }

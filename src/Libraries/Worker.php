@@ -29,13 +29,22 @@ class Worker extends Base
         if ($this->pheanstalk) {
             while (true) {
                 $job = $this->pheanstalk->reserveWithTimeout(50);
-                $this->_getJob($job);
-
+                $result = $this->_getJob($job);
                 if (ENVIRONMENT === 'testing') {
-                    return true;
+                    return $result;
                 }
             }
         }
+    }
+
+    protected function preActionJob(Job $job = null)
+    {
+        $this->benchmark->start('job');
+    }
+
+    protected function postActionJob(Job $job = null, $result)
+    {
+        $this->benchmark->stop('job');
     }
 
     public function listTubes(): array
@@ -43,62 +52,29 @@ class Worker extends Base
         return $this->pheanstalk->listTubes();
     }
 
-    private function _getJob(Job $job = null)
+    private function _getJob(Job $job)
     {
-        if (isset($job)) {
-            $this->doctrine = Utils::checkDatabaseConnection($this->doctrine);
+        $data = \json_decode($job->getData());
 
-            $data = \json_decode($job->getData());
+        $this->preActionJob($job);
 
-            $class  = (isset($this->config->tasks[$data->action])) ? new $this->config->tasks[$data->action]() : null;
+        $command = '\Daycry\Queues\Jobs\\' . \ucfirst($data->type);
+        $type = new $command($data->params);
+        $result = $type->execute();
 
-            if($class && $class instanceof TaskInterface)
-            {
-                $this->benchmark->start('job');
+        $this->postActionJob($job, $result);
 
-                $task = (isset($data->task) && $data->task !== null) ?
-                    $this->doctrine->em->getRepository('\App\Models\Entity\UserSocialNetworkTask')->findOneBy(['id' => $data->task]) : null;
+        $this->pheanstalk->delete($job);
 
-                if ($task) {
-                    $task->setInProgress(1);
-                    $task->setLastExecution(new Time('now'));
-                    $this->doctrine->em->persist($task);
-                    $this->doctrine->em->flush();
-                }
-
-                // @codeCoverageIgnoreStart
-                if (ENVIRONMENT !== 'testing') {
-                    $status = $class->initialize($data->params);
-                }else{
-                    $status = true;
-                }
-                // @codeCoverageIgnoreEnd
-
-                $this->benchmark->stop('job');
-
-                if ($task) {
-                    $task->setInProgress(0);
-                    $task->setLastStatus($status);
-                    $this->doctrine->em->persist($task);
-                    $this->doctrine->em->flush();
-                }
-
-                unset($class);
-            }
-
-            $this->pheanstalk->delete($job);
-        }
+        return $result;
     }
 
     private function _queues()
     {
-        $queues = $this->doctrine->em->getRepository('\App\Models\Entity\AutomatonQueue')->findBy(['active' => 1]);
-
-        try {
-            if ($queues) {
-                foreach ($queues as $queue) {
-                    $this->pheanstalk->watch($queue->getName());
-                }
+        try
+        {
+            foreach ($this->config->queues as $queue) {
+                $this->pheanstalk->watch($queue);
             }
         } catch (Exception $ex) {
             throw $ex;

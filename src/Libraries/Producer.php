@@ -6,7 +6,6 @@ use Daycry\Queues\Exceptions\DataStructureException;
 use Pheanstalk\Exception;
 use Pheanstalk\Job;
 use Daycry\Queues\Config\Queue;
-use Daycry\Queues\Config\QueueValidation;
 
 class Producer extends Base
 {
@@ -15,7 +14,7 @@ class Producer extends Base
     private int $delay = 0;
     private int $priority = 10;
     private int $ttr = 3600;
-    private ?array $params = []; 
+    private array $params; 
 
     public function __construct(?Queue $config = null)
     {
@@ -24,6 +23,11 @@ class Producer extends Base
 
     public function setQueue(string $queue): self
     {
+        if( !in_array($queue, $this->config->queues) )
+        {
+            throw DataStructureException::invalidQueue($queue);
+        }
+
         $this->queue = $queue;
 
         return $this;
@@ -68,7 +72,7 @@ class Producer extends Base
     {
         try {
             $this->_verifyStructure();
-            return $this->pheanstalk->useTube($this->queue)->put(\json_encode($this->params), $this->priority, $this->delay, $this->ttr);
+            return $this->pheanstalk->useTube($this->queue)->put(\json_encode(array('type' => $this->type, 'params' => $this->params)), $this->priority, $this->delay, $this->ttr);
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -76,15 +80,12 @@ class Producer extends Base
 
     private function _verifyStructure()
     {
-        $validator = \Config\Services::validation(config(QueueValidation::class), false);
 
         $data = array();
         foreach((object)get_class_vars(__CLASS__) as $key => $value) {
             $data[$key] = $this->$key;
         }
 
-        if (!$validator->run($data, 'dataQueue')) {
-            throw DataStructureException::validationError($validator->listErrors());
-        }
+        \Daycry\Queues\Utils\CheckStructure::checkDataQueue($data);
     }
 }
