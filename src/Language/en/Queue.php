@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'invalidQueue' => '\'{key}\' is invalid queue'
+    'invalidQueue' => '\'{queue}\' is invalid queue'
 ];
