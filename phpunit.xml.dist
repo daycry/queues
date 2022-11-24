@@ -36,7 +36,7 @@
 		<junit outputFile="build/logs/logfile.xml"/>
 	</logging>
 	<php>
-		<server name="app.baseURL" value="https://vendor.local/"/>
+		<server name="app.baseURL" value="https://queues.local/"/>
 		<env name="app.indexPage" value="" force="true"/>
 		<env name="app.appTimezone" value="Europe/Madrid" force="true"/>
 		

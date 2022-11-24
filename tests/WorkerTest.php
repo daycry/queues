@@ -51,4 +51,17 @@ final class WorkerTest extends CIUnitTestCase
         $this->assertArrayHasKey(0, $status);
         $this->assertStringStartsWith('total', $status[0]);
     }
+
+    public function testWorkerUrl()
+    {
+        $status = (new Worker($this->config))->watch();
+        $this->assertStringContainsString('<!DOCTYPE html>', $status);
+    }
+
+    public function testWorkerApi()
+    {
+        $status = (new Worker($this->config))->watch();
+        $this->assertObjectHasAttribute('data', $status);
+        //$this->assertStringContainsString('<!DOCTYPE html>', $status);
+    }
 }

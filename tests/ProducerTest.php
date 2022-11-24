@@ -81,4 +81,29 @@ final class ProducerTest extends CIUnitTestCase
 
         $this->assertInstanceOf(Job::class, $job);
     }
+
+    public function testProducerUrl()
+    {
+        $producer = new Producer($this->config);
+        $job = $producer->setDelay(0)->setType('url')->setParams(array('url' => 'https://github.com/'))->createJob();
+
+        $this->assertInstanceOf(Job::class, $job);
+    }
+
+    public function testProducerApi()
+    {
+        $producer = new Producer($this->config);
+        $job = $producer->setDelay(0)->setType('api')->setParams(
+            array(
+                'verify' => false,
+                'url' => 'https://httpbin.org/post',
+                'method' => 'post',
+                'headers' => ['Content-Type' => 'application/json', 'Accept' => 'application/json', 'X-API-KEY' => '1234'],
+                'type' => 'json',
+                'body' => ['name' => 'daycry']
+            )
+        )->createJob();
+
+        $this->assertInstanceOf(Job::class, $job);
+    }
 }
