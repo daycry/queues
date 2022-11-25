@@ -3,6 +3,13 @@
 # Queues for Codeigniter 4 (using Beanstalk)
 Codeigniter 4 with beanstalk queue
 
+[![Build Status](https://github.com/daycry/queues/workflows/PHP%20Tests/badge.svg)](https://github.com/daycry/queues/actions?query=workflow%3A%22PHP+Tests%22)
+[![Coverage Status](https://coveralls.io/repos/github/daycry/queues/badge.svg?branch=master)](https://coveralls.io/github/daycry/queues?branch=master)
+[![Downloads](https://poser.pugx.org/daycry/queues/downloads)](https://packagist.org/packages/daycry/queues)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/daycry/queues)](https://packagist.org/packages/daycry/queues)
+[![GitHub stars](https://img.shields.io/github/stars/daycry/queues)](https://packagist.org/packages/daycry/queues)
+[![GitHub license](https://img.shields.io/github/license/daycry/queues)](https://github.com/daycry/queues/blob/master/LICENSE)
+
 ## Installation via composer
 
 Use the package with composer install
