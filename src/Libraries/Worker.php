@@ -70,13 +70,8 @@ class Worker extends Base
 
     private function _queues()
     {
-        try
-        {
-            foreach ($this->config->queues as $queue) {
-                $this->pheanstalk->watch($queue);
-            }
-        } catch (Exception $ex) {
-            throw $ex;
+        foreach ($this->config->queues as $queue) {
+            $this->pheanstalk->watch($queue);
         }
     }
 }

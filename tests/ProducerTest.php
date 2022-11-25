@@ -35,7 +35,7 @@ final class ProducerTest extends CIUnitTestCase
         $this->expectException(DataStructureException::class);
 
         $producer = new Producer($this->config);
-        $job = $producer->setQueue('')->setDelay(0)->setType('')->setParams(array('command1' => 'job:test'))->createJob();
+        $job = $producer->setQueue('')->setDelay(-1)->setType('')->setParams(array('command1' => 'job:test'))->createJob();
     }
 
     public function testProducerQueueError()
