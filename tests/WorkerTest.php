@@ -1,7 +1,7 @@
 <?php
 
 use CodeIgniter\Test\CIUnitTestCase;
-use Daycry\Queues\libraries\Worker;
+use Daycry\Queues\Libraries\Worker;
 use Daycry\Queues\Config\Queue;
 use Pheanstalk\Exception\ClientException;
 
