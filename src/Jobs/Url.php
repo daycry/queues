@@ -3,8 +3,9 @@
 namespace Daycry\Queues\Jobs;
 
 use GuzzleHttp\Client;
+use Daycry\Queues\Interfaces\JobInterface;
 
-class Url
+class Url implements JobInterface
 {
     protected object $params;
 

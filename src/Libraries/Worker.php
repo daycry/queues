@@ -5,7 +5,6 @@ namespace Daycry\Queues\Libraries;
 use Pheanstalk\Exception;
 use Pheanstalk\Job;
 use Daycry\Queues\Config\Queue;
-use Daycry\Doctrine\Doctrine;
 use App\Libraries\Utils;
 use CodeIgniter\I18n\Time;
 use Queue\Interfaces\TaskInterface;
@@ -58,7 +57,7 @@ class Worker extends Base
 
         $this->preActionJob($job);
 
-        $command = '\Daycry\Queues\Jobs\\' . \ucfirst($data->type);
+        $command = $this->config->jobs[$data->type];
         $type = new $command($data->params);
         $result = $type->execute();
 

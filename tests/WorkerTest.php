@@ -4,7 +4,6 @@ use CodeIgniter\Test\CIUnitTestCase;
 use Daycry\Queues\libraries\Worker;
 use Daycry\Queues\Config\Queue;
 use Pheanstalk\Exception\ClientException;
-use CodeIgniter\CLI\CLI;
 
 /**
  * @internal
@@ -62,6 +61,5 @@ final class WorkerTest extends CIUnitTestCase
     {
         $status = (new Worker($this->config))->watch();
         $this->assertObjectHasAttribute('data', $status);
-        //$this->assertStringContainsString('<!DOCTYPE html>', $status);
     }
 }

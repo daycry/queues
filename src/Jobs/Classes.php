@@ -2,7 +2,9 @@
 
 namespace Daycry\Queues\Jobs;
 
-class Classes
+use Daycry\Queues\Interfaces\JobInterface;
+
+class Classes implements JobInterface
 {
     protected object $params;
 

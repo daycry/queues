@@ -4,8 +4,9 @@ namespace Daycry\Queues\Jobs;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use Daycry\Queues\Interfaces\JobInterface;
 
-class Api
+class Api implements JobInterface
 {
     protected object $params;
 
