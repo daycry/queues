@@ -43,7 +43,7 @@ Then you can adjust it to your needs. By default file will be present in `app/Co
 ```php
 
 $producer = new Producer();
-$job = $producer->setDelay(0)->setType('api')->setParams(
+$job = $producer->setQueue('default')->setPriority(10)->setTtr(3600)->setDelay(0)->setType('api')->setParams(
     array(
         'verify' => false,
         'url' => 'https://httpbin.org/post',

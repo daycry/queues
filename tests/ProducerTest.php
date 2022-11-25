@@ -29,6 +29,16 @@ final class ProducerTest extends CIUnitTestCase
         $producer = new Producer($this->config);
         $job = $producer->setDelay(0)->setType('command')->setParams(array('command' => 'job:test'))->createJob();
     }
+
+    public function testProducerQueueError()
+    {
+        $this->expectException(DataStructureException::class);
+
+        $producer = new Producer($this->config);
+        $job = $producer->setQueue('default1')->setDelay(0)->setType('command')->setParams(array('command1' => 'job:test'))->createJob();
+
+        $this->assertInstanceOf(Job::class, $job);
+    }
     
     public function testProducerParamsError()
     {
@@ -43,7 +53,7 @@ final class ProducerTest extends CIUnitTestCase
     public function testProducerCommand()
     {
         $producer = new Producer($this->config);
-        $job = $producer->setDelay(0)->setType('command')->setParams(array('command' => 'job:test'))->createJob();
+        $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('command')->setParams(array('command' => 'job:test'))->createJob();
 
         $this->assertInstanceOf(Job::class, $job);
     }
@@ -53,7 +63,7 @@ final class ProducerTest extends CIUnitTestCase
         $this->expectException(DataStructureException::class);
 
         $producer = new Producer($this->config);
-        $job = $producer->setDelay(0)->setType('classes')->setParams(
+        $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('classes')->setParams(
             array(
                 'class1' => \Tests\Support\Classes\ClassTest::class, 
                 'method' => 'myMethod',
@@ -64,7 +74,7 @@ final class ProducerTest extends CIUnitTestCase
     public function testProducerClass()
     {
         $producer = new Producer($this->config);
-        $job = $producer->setDelay(0)->setType('classes')->setParams(
+        $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('classes')->setParams(
             array(
                 'class' => \Tests\Support\Classes\ClassTest::class, 
                 'method' => 'myMethod',
@@ -77,7 +87,7 @@ final class ProducerTest extends CIUnitTestCase
     public function testProducerShell()
     {
         $producer = new Producer($this->config);
-        $job = $producer->setDelay(0)->setType('shell')->setParams(array('command' => 'ls -lisa'))->createJob();
+        $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('shell')->setParams(array('command' => 'ls -lisa'))->createJob();
 
         $this->assertInstanceOf(Job::class, $job);
     }
@@ -85,7 +95,7 @@ final class ProducerTest extends CIUnitTestCase
     public function testProducerUrl()
     {
         $producer = new Producer($this->config);
-        $job = $producer->setDelay(0)->setType('url')->setParams(array('url' => 'https://github.com/'))->createJob();
+        $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('url')->setParams(array('url' => 'https://github.com/'))->createJob();
 
         $this->assertInstanceOf(Job::class, $job);
     }
@@ -93,7 +103,7 @@ final class ProducerTest extends CIUnitTestCase
     public function testProducerApi()
     {
         $producer = new Producer($this->config);
-        $job = $producer->setDelay(0)->setType('api')->setParams(
+        $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('api')->setParams(
             array(
                 'verify' => false,
                 'url' => 'https://httpbin.org/post',
