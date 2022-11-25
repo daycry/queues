@@ -30,14 +30,20 @@ final class ProducerTest extends CIUnitTestCase
         $job = $producer->setDelay(0)->setType('command')->setParams(array('command' => 'job:test'))->createJob();
     }
 
+    public function testProducerDataError()
+    {
+        $this->expectException(DataStructureException::class);
+
+        $producer = new Producer($this->config);
+        $job = $producer->setQueue('')->setDelay(0)->setType('')->setParams(array('command1' => 'job:test'))->createJob();
+    }
+
     public function testProducerQueueError()
     {
         $this->expectException(DataStructureException::class);
 
         $producer = new Producer($this->config);
         $job = $producer->setQueue('default1')->setDelay(0)->setType('command')->setParams(array('command1' => 'job:test'))->createJob();
-
-        $this->assertInstanceOf(Job::class, $job);
     }
     
     public function testProducerParamsError()
@@ -46,12 +52,12 @@ final class ProducerTest extends CIUnitTestCase
 
         $producer = new Producer($this->config);
         $job = $producer->setDelay(0)->setType('command')->setParams(array('command1' => 'job:test'))->createJob();
-
-        $this->assertInstanceOf(Job::class, $job);
     }
 
     public function testProducerCommand()
     {
+        $this->config->queues = ['default'];
+
         $producer = new Producer($this->config);
         $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('command')->setParams(array('command' => 'job:test'))->createJob();
 
@@ -73,6 +79,8 @@ final class ProducerTest extends CIUnitTestCase
 
     public function testProducerClass()
     {
+        $this->config->queues = ['default'];
+
         $producer = new Producer($this->config);
         $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('classes')->setParams(
             array(
