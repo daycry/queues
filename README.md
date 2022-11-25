@@ -34,7 +34,8 @@ Then you can adjust it to your needs. By default file will be present in `app/Co
 ## Usage Producer Class
 
 ```php
-$producer = new Producer($this->config);
+
+$producer = new Producer();
 $job = $producer->setDelay(0)->setType('api')->setParams(
     array(
         'verify' => false,
@@ -47,3 +48,7 @@ $job = $producer->setDelay(0)->setType('api')->setParams(
 )->createJob();
 
 ```
+
+## Usage Worker
+
+> php spark queue:run
