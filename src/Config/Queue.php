@@ -30,4 +30,6 @@ class Queue extends BaseConfig
         'url' => \Daycry\Queues\Jobs\Url::class,
         'api' => \Daycry\Queues\Jobs\Api::class
     ];
+
+    public $worker = \Daycry\Queues\Libraries\Worker::class;
 }

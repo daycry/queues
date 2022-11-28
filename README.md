@@ -38,7 +38,19 @@ Run command:
 This command will copy a config file to your app namespace.
 Then you can adjust it to your needs. By default file will be present in `app/Config/Queue.php`.
 
+Allowed tasks
+
+| Tasks         |
+|:--------------|
+| api           |
+| command       |
+| classes       |
+| shell         |
+| url           |
+
 ## Usage Producer Class
+
+API
 
 ```php
 
@@ -56,6 +68,102 @@ $job = $producer->setQueue('default')->setPriority(10)->setTtr(3600)->setDelay(0
 
 ```
 
+COMMAND
+
+```php
+
+$producer = new Producer();
+$job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('command')->setParams(
+    array(
+        'command' => 'job:test'
+    )
+)->createJo();
+
+```
+
+CLASSES
+
+```php
+
+$producer = new Producer();
+$job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('classes')->setParams(
+    array(
+        'class' => \Tests\Support\Classes\ClassTest::class, 
+        'method' => 'myMethod',
+        'params' => array('param1' => 'pa1')
+    )
+)->createJob();
+
+```
+
+SHELL
+
+```php
+
+$producer = new Producer();
+$job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('shell')->setParams(
+    array(
+        'command' => 'ls -lisa'
+    )
+)->createJob();
+
+```
+
+URL
+
+```php
+
+$producer = new Producer();
+$job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('url')->setParams(
+    array(
+        'url' => 'https://github.com/'
+    )
+)->createJob();
+
+```
+
+You can pass the configuration class as a parameter in case you want to customize an attribute 
+
+```php
+$config = config('Queue');
+$producer = new Producer($config);
+
+```
+
 ## Usage Worker
 
-    > php spark queue:run
+    > * * * * * cd /path-to-your-project && php spark queue:run >> /dev/null 2>&1
+
+If you want change or extend worker class, you can edit in config file.
+
+```php
+public $worker = \Daycry\Queues\Libraries\Worker::class;
+```
+
+In order to use these functions, the class must be extended.
+
+```php
+<?php
+
+namespace App\Libraries;
+
+class Worker extends \Daycry\Queues\Libraries\Worker
+{
+    public function __construct(?Queue $config = null)
+    {
+        $this->benchmark = Services::timer();
+
+        parent::__construct($config);
+    }
+
+    protected function preActionJob(Job $job = null)
+    {
+        $this->benchmark->start('job');
+    }
+
+    protected function postActionJob(Job $job = null, $result)
+    {
+        $this->benchmark->stop('job');
+    }
+}
+```
