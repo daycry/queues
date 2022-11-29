@@ -2,12 +2,8 @@
 
 namespace Daycry\Queues\Libraries;
 
-use Pheanstalk\Exception;
 use Pheanstalk\Job;
 use Daycry\Queues\Config\Queue;
-use App\Libraries\Utils;
-use CodeIgniter\I18n\Time;
-use Queue\Interfaces\TaskInterface;
 use CodeIgniter\Debug\Timer;
 use Config\Services;
 

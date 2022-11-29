@@ -4,7 +4,6 @@ namespace Daycry\Queues\Libraries;
 
 use Pheanstalk\Pheanstalk;
 use Daycry\Queues\Config\Queue;
-use Pheanstalk\Exception;
 
 abstract class Base
 {
