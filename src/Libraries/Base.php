@@ -13,7 +13,7 @@ abstract class Base
 
     public function __construct(?Queue $config = null)
     {
-        $this->config = ($config) ?: new Queue();
+        $this->config = ($config) ?: config('Queue');
         $this->config->queues   = $this->_parseConfigFile($this->config->queues);
         $this->_init_queue();
     }
