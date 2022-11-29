@@ -14,7 +14,7 @@ class QueueRun extends BaseCommand
 
     public function run(array $params)
     {
-        $config = new Queue();
+        $config = config('Queue');
         $worker = (new $config->worker($config));
         CLI::write('Started successfully.', 'green');
         return $worker->watch();
