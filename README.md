@@ -77,7 +77,7 @@ $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600
     array(
         'command' => 'job:test'
     )
-)->createJo();
+)->createJob();
 
 ```
 
