@@ -54,7 +54,7 @@ API
 
 ```php
 
-$producer = new Producer();
+$producer = new \Daycry\Queues\Libraries\Producer();
 $job = $producer->setQueue('default')->setPriority(10)->setTtr(3600)->setDelay(0)->setType('api')->setParams(
     array(
         'verify' => false,
@@ -72,7 +72,7 @@ COMMAND
 
 ```php
 
-$producer = new Producer();
+$producer = new \Daycry\Queues\Libraries\Producer();
 $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('command')->setParams(
     array(
         'command' => 'job:test'
@@ -85,7 +85,7 @@ CLASSES
 
 ```php
 
-$producer = new Producer();
+$producer = new \Daycry\Queues\Libraries\Producer();
 $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('classes')->setParams(
     array(
         'class' => \Tests\Support\Classes\ClassTest::class, 
@@ -100,7 +100,7 @@ SHELL
 
 ```php
 
-$producer = new Producer();
+$producer = new \Daycry\Queues\Libraries\Producer();
 $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('shell')->setParams(
     array(
         'command' => 'ls -lisa'
@@ -113,7 +113,7 @@ URL
 
 ```php
 
-$producer = new Producer();
+$producer = new \Daycry\Queues\Libraries\Producer();
 $job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('url')->setParams(
     array(
         'url' => 'https://github.com/'
@@ -126,7 +126,7 @@ You can pass the configuration class as a parameter in case you want to customiz
 
 ```php
 $config = config('Queue');
-$producer = new Producer($config);
+$producer = new \Daycry\Queues\Libraries\Producer($config);
 
 ```
 
