@@ -24,9 +24,11 @@ class Worker extends Base
         if ($this->pheanstalk) {
             while (true) {
                 $job = $this->pheanstalk->reserveWithTimeout(50);
-                $result = $this->_getJob($job);
-                if (ENVIRONMENT === 'testing') {
-                    return $result;
+                if($job) {
+                    $result = $this->_getJob($job);
+                    if (ENVIRONMENT === 'testing') {
+                        return $result;
+                    }
                 }
             }
         }
