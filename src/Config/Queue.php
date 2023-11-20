@@ -41,8 +41,8 @@ class Queue extends BaseConfig
     ];
 
     public array $serviceBus = [
-        'url' => 'https://sb-servicebus-01-weu-pre.servicebus.windows.net/',
-        'issuer' => 'RootManageSharedAccessKey',
-        'secret' => '8f3SOZV0chyAQtBOr+t7cLTilDGGsU7+D+ASbHWq3OI='
+        'url' => '',
+        'issuer' => '',
+        'secret' => ''
     ];
 }

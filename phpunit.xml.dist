@@ -54,5 +54,9 @@
 
         <!-- Directory containing the front controller (index.php) -->
         <const name="WRITEPATH" value="tests/_support/"/>
+
+		<env name="queue.serviceBus.url" value="https://sb-servicebus-01-weu-pre.servicebus.windows.net/" force="true"/>
+		<env name="queue.serviceBus.issuer" value="RootManageSharedAccessKey" force="true"/>
+		<env name="queue.serviceBus.secret" value="8f3SOZV0chyAQtBOr+t7cLTilDGGsU7+D+ASbHWq3OI=" force="true"/>
     </php>
 </phpunit>
