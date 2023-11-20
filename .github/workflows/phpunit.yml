@@ -18,8 +18,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['8.1', '8.2']
-        redis-version: [6, 7]
+        php-versions: ['8.2']
+        redis-version: [7]
 
     steps:
       - uses: actions/checkout@v2
