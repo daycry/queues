@@ -1,35 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Daycry\Queues\Config;
 
 use CodeIgniter\Config\BaseConfig;
+use Daycry\Queues\Queues\BeanstalkQueue;
+use Daycry\Queues\Queues\RedisQueue;
+use Daycry\Queues\Queues\ServiceBusQueue;
+use Daycry\Queues\Queues\SyncQueue;
 
 class Queue extends BaseConfig
 {
-    /**
-     * Host
-     */
-    public $host = 'localhost';
-
-    /**
-     * Port
-     */
-    public $port = 11300;
-
-    /**
-     * Queues
-     * Example: $queues = ['name1','name2']; or $queues = 'name1,name2';
-     */
-    public $queues = 'default';
-
-    public $jobs = 
-    [
-        'classes' => \Daycry\Queues\Jobs\Classes::class,
-        'command' => \Daycry\Queues\Jobs\Command::class,
-        'shell' => \Daycry\Queues\Jobs\Shell::class,
-        'url' => \Daycry\Queues\Jobs\Url::class,
-        'api' => \Daycry\Queues\Jobs\Api::class
+    public array $jobTypes = [
+        'command',
+        'shell',
+        'event',
+        'url',
+        'classes'
     ];
 
-    public $worker = \Daycry\Queues\Libraries\Worker::class;
+    public string|array $queues = 'default,dummy';
+
+    public string $worker = 'sync';
+
+    public int $maxAttempts = 5;
+
+    public int $waitingTimeBetweenJobs = 2;
+
+    public array $workers = [
+        'sync' => SyncQueue::class,
+        'beanstalk' => BeanstalkQueue::class,
+        'redis' => RedisQueue::class,
+        'serviceBus' => ServiceBusQueue::class
+    ];
+
+    public array $beanstalk = [
+        'host' => '127.0.0.1',
+        'port' => 11300
+    ];
+
+    public array $serviceBus = [
+        'url' => 'https://sb-servicebus-01-weu-pre.servicebus.windows.net/',
+        'issuer' => 'RootManageSharedAccessKey',
+        'secret' => '8f3SOZV0chyAQtBOr+t7cLTilDGGsU7+D+ASbHWq3OI='
+    ];
 }

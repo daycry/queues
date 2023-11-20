@@ -1,7 +1,7 @@
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?business=SYC5XDT23UZ5G&no_recurring=0&item_name=Thank+you%21&currency_code=EUR)
 
 # Queues for Codeigniter 4 (using Beanstalk)
-Codeigniter 4 with beanstalk queue
+Codeigniter 4 with beanstalk, redis, sync & service bus (azure) queues
 
 [![Build Status](https://github.com/daycry/queues/workflows/PHP%20Tests/badge.svg)](https://github.com/daycry/queues/actions?query=workflow%3A%22PHP+Tests%22)
 [![Coverage Status](https://coveralls.io/repos/github/daycry/queues/badge.svg?branch=master)](https://coveralls.io/github/daycry/queues?branch=master)
@@ -16,24 +16,11 @@ Use the package with composer install
 
 	> composer require daycry/queues
 
-## Manual installation
-
-Download this repo and then enable it by editing **app/Config/Autoload.php** and adding the **Daycry\Queues**
-namespace to the **$psr4** array. For example, if you copied it into **app/ThirdParty**:
-
-```php
-$psr4 = [
-    'Config'      => APPPATH . 'Config',
-    APP_NAMESPACE => APPPATH,
-    'Daycry\Queues' => APPPATH .'ThirdParty/queues/src',
-];
-```
-
 ## Configuration
 
 Run command:
 
-	> php spark queue:publish
+	> php spark queues:publish
 
 This command will copy a config file to your app namespace.
 Then you can adjust it to your needs. By default file will be present in `app/Config/Queue.php`.
@@ -42,42 +29,40 @@ Allowed tasks
 
 | Tasks         |
 |:--------------|
-| api           |
+| url           |
 | command       |
 | classes       |
 | shell         |
-| url           |
 
-## Usage Producer Class
+## Usage Job Class
 
-API
+URL
 
 ```php
+use Daycry\Queues\Job;
 
-$producer = new \Daycry\Queues\Libraries\Producer();
-$job = $producer->setQueue('default')->setPriority(10)->setTtr(3600)->setDelay(0)->setType('api')->setParams(
-    array(
-        'verify' => false,
-        'url' => 'https://httpbin.org/post',
-        'method' => 'post',
-        'headers' => ['Content-Type' => 'application/json', 'Accept' => 'application/json', 'X-API-KEY' => '1234'],
-        'type' => 'json',
-        'body' => ['name' => 'daycry']
-    )
-)->createJob();
+$job = new Job();
+$job = $producer->setQueue('default')
+    ->url('https://httpbin.org/post', [
+            'verify' => false,
+            'method' => 'post',
+            'body' => ['param1' => 'p1'],
+            'dataType' => 'json',
+            'headers' => [
+                'X-API-KEY' => '1234'
+            ]
+        )
+    ->enqueue();
 
 ```
 
 COMMAND
 
 ```php
+use Daycry\Queues\Job;
 
-$producer = new \Daycry\Queues\Libraries\Producer();
-$job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('command')->setParams(
-    array(
-        'command' => 'job:test'
-    )
-)->createJob();
+$job = new Job();
+$job = $producer->command('foo:bar')->enqueue('default');
 
 ```
 
@@ -85,85 +70,102 @@ CLASSES
 
 ```php
 
-$producer = new \Daycry\Queues\Libraries\Producer();
-$job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('classes')->setParams(
-    array(
-        'class' => \Tests\Support\Classes\ClassTest::class, 
-        'method' => 'myMethod',
-        'params' => array('param1' => 'pa1')
-    )
-)->createJob();
+use Daycry\Queues\Job;
+
+$job = new Job();
+$job->classes(\Tests\Support\Classes\Example::class, 'run', ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]])->enqueue('default');
 
 ```
+
+You can pass options in third parameter that contains paraterms in construct function and/or method.
 
 SHELL
 
 ```php
 
-$producer = new \Daycry\Queues\Libraries\Producer();
-$job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('shell')->setParams(
-    array(
-        'command' => 'ls -lisa'
-    )
-)->createJob();
+use Daycry\Queues\Job;
+
+$job = new Job();
+$job->shell('ls')->enqueue('default');
 
 ```
 
-URL
+## Job Scheduled
 
 ```php
 
-$producer = new \Daycry\Queues\Libraries\Producer();
-$job = $producer->setQueue('default')->setPriority(10)->setDelay(0)->setTtr(3600)->setType('url')->setParams(
-    array(
-        'url' => 'https://github.com/'
-    )
-)->createJob();
+$dateTimeObj= new DateTime('now');
+$dateTimeObj->add(new DateInterval("PT1H"));
+
+$job = new Job();
+$job->shell('ls');
+$job->scheduled($dateTimeObj);
+$result = $job->enqueue('default');
 
 ```
 
-You can pass the configuration class as a parameter in case you want to customize an attribute 
+## Job Callback
+
+You can configure a callback using 'URL' type.
 
 ```php
-$config = config('Queue');
-$producer = new \Daycry\Queues\Libraries\Producer($config);
+
+$job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' =>['X-API-KEY' => '1234']]);
+
+```
+
+## Custom Methods
+
+Beanstalk and Service Bus have custom methods
+
+BEANSTALK
+
+```php
+
+use Daycry\Queues\Job;
+
+$producer = new Job();
+$job->shell('ls')->setPriority(10)->setTtr(3600)->enqueue('default');
+
+```
+
+SERVICE BUS
+
+```php
+
+use Daycry\Queues\Job;
+
+$producer = new Job();
+$job->shell('ls')->setLabel('label')->enqueue('default');
 
 ```
 
 ## Usage Worker
 
-    > * * * * * cd /path-to-your-project && php spark queue:run >> /dev/null 2>&1
+    > cd /path-to-your-project && php spark queues:worker default
 
-If you want change or extend worker class, you can edit in config file.
+On default is the name of queue.
 
-```php
-public $worker = \Daycry\Queues\Libraries\Worker::class;
-```
+
+If you want to execute only one time the worker, you can do this:
+
+    > cd /path-to-your-project && php spark queues:worker default --oneTime
 
 In order to use these functions, the class must be extended.
 
+You can extends the worker command for customize early and late methods.
 ```php
-<?php
+use Daycry\Queues\Job;
 
-namespace App\Libraries;
+$this->earlyChecks(Job $j);
 
-class Worker extends \Daycry\Queues\Libraries\Worker
-{
-    public function __construct(?Queue $config = null)
-    {
-        $this->benchmark = Services::timer();
+//job execution
 
-        parent::__construct($config);
-    }
+$this->lateChecks($j);
 
-    protected function preActionJob(Job $job = null)
-    {
-        $this->benchmark->start('job');
-    }
+$this->earlyCallbackChecks(Job $j);
 
-    protected function postActionJob(Job $job = null, $result)
-    {
-        $this->benchmark->stop('job');
-    }
-}
+//callback execution
+
+$this->lateCallbackChecks($j);
 ```

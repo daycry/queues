@@ -1,6 +1,7 @@
 {
     "name": "daycry/queues",
-    "description": "Beanstalk queues for Codeigniter 4",
+    "description": "Queues for Codeigniter 4",
+    "keywords": ["beanstalk", "redis", "service bus (azure)"],
     "homepage": "https://github.com/daycry/queues",
     "authors":
     [
@@ -12,19 +13,24 @@
     ],
     "license": "MIT",
     "require": {
-      "php": ">=7.4 || ^8.0",
-        "pda/pheanstalk": "^4.0",
-        "guzzlehttp/guzzle": "^7.5"
+        "php": "^8.0",
+        "daycry/settings": "^1.0",
+        "guzzlehttp/guzzle": "^7.8",
+        "pda/pheanstalk": "^5.0",
+        "supervisorphp/supervisor": "^5.1"
     },
     "require-dev":
     {
-        "codeigniter4/framework": "^4",
         "codeigniter/coding-standard": "^1.1",
+        "codeigniter4/devkit": "^1.1",
+        "codeigniter4/framework": "^4",
         "fakerphp/faker": "^1.9",
         "friendsofphp/php-cs-fixer": "3.6.*",
         "mikey179/vfsstream": "^1.6",
         "nexusphp/cs-config": "^3.3",
         "nexusphp/tachycardia": "^1.0",
+        "php-vcr/php-vcr": "^1",
+        "php-vcr/phpunit-testlistener-vcr": "dev-php8",
         "phpstan/phpstan": "^1.7.1",
         "phpunit/phpunit": "^9.1",
         "rector/rector": "0.14.0"
@@ -46,6 +52,12 @@
             "Tests\\Support\\": "tests/_support"
         }
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/abraham/phpunit-testlistener-vcr"
+        }
+    ],
     "scripts": {
         "cs-fixer": [ 
             "php-cs-fixer fix --ansi --verbose src",
@@ -62,5 +74,16 @@
         "phpcpd": [
             "php phpcpd.phar src/"
         ]
-    }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true,
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
