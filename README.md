@@ -42,7 +42,7 @@ URL
 use Daycry\Queues\Job;
 
 $job = new Job();
-$job = $producer->setQueue('default')
+$job = $job->setQueue('default')
     ->url('https://httpbin.org/post', [
             'verify' => false,
             'method' => 'post',
@@ -62,7 +62,7 @@ COMMAND
 use Daycry\Queues\Job;
 
 $job = new Job();
-$job = $producer->command('foo:bar')->enqueue('default');
+$job = $job->command('foo:bar')->enqueue('default');
 
 ```
 
@@ -124,7 +124,7 @@ BEANSTALK
 
 use Daycry\Queues\Job;
 
-$producer = new Job();
+$job = new Job();
 $job->shell('ls')->setPriority(10)->setTtr(3600)->enqueue('default');
 
 ```
@@ -135,7 +135,7 @@ SERVICE BUS
 
 use Daycry\Queues\Job;
 
-$producer = new Job();
+$job = new Job();
 $job->shell('ls')->setLabel('label')->enqueue('default');
 
 ```
