@@ -33,6 +33,7 @@
         "php-vcr/phpunit-testlistener-vcr": "dev-php8",
         "phpstan/phpstan": "^1.7.1",
         "phpunit/phpunit": "^9.1",
+        "phpunit/phpcov": "^8",
         "rector/rector": "0.14.0"
     },
     "autoload":
@@ -69,7 +70,9 @@
         ],
         "test": [
             "Composer\\Config::disableProcessTimeout",
-            "vendor/bin/phpunit"
+            "vendor/bin/phpunit --exclude-group fixtures --coverage-php build/coverage/no-fixtures.cov",
+            "vendor/bin/phpunit --group fixtures --coverage-php build/coverage/fixtures.cov",
+            "vendor/bin/phpcov merge --clover build/logs/clover.xml build/coverage --html build/logs/html"
         ],
         "phpcpd": [
             "php phpcpd.phar src/"

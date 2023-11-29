@@ -25,7 +25,7 @@ final class JobTest extends TestCase
     public function testCommand()
     {
         $name = 'job:test';
-        $command = json_decode(json_encode(['command' => $name]));
+        $command = json_decode(json_encode(['command' => $name, 'options' => []]));
 
         $callback = new stdClass();
         $callback->url = 'https://httpbin.org/post';
@@ -53,7 +53,7 @@ final class JobTest extends TestCase
         $this->expectException(JobException::class);
         
         $name = 'job:test';
-        $command = json_decode(json_encode(['command' => $name]));
+        $command = json_decode(json_encode(['command' => $name, 'options' => []]));
 
         $objectExpected = new stdClass();
         $objectExpected->type = 'command';
@@ -70,7 +70,7 @@ final class JobTest extends TestCase
     {
         $this->expectException(JobException::class);
         $name = 'job:test';
-        $command = json_decode(json_encode(['command' => $name]));
+        $command = json_decode(json_encode(['command' => $name, 'options' => []]));
 
         $objectExpected = new stdClass();
         $objectExpected->type = 'foo';
@@ -83,7 +83,7 @@ final class JobTest extends TestCase
     public function testShell()
     {
         $name = 'job:test';
-        $command = json_decode(json_encode(['command' => $name]));
+        $command = json_decode(json_encode(['command' => $name, 'options' => []]));
 
         $objectExpected = new stdClass();
         $objectExpected->type = 'shell';
@@ -124,7 +124,7 @@ final class JobTest extends TestCase
     public function testEvent()
     {
         $name = 'email';
-        $command = json_decode(json_encode(['event' => $name]));
+        $command = json_decode(json_encode(['event' => $name, 'options' => []]));
 
         $objectExpected = new stdClass();
         $objectExpected->type = 'event';
@@ -175,7 +175,7 @@ final class JobTest extends TestCase
     public function testCommandScheduled()
     {
         $name = 'job:test';
-        $command = json_decode(json_encode(['command' => $name]));
+        $command = json_decode(json_encode(['command' => $name, 'options' => []]));
         $scheduled = new DateTime('now');
 
         $objectExpected = new stdClass();

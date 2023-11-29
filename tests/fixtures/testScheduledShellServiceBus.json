@@ -1,1 +1,71 @@
-[]
+[{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/sb-servicebus-01-weu-pre.servicebus.windows.net\/dummy\/messages",
+        "headers": {
+            "Host": "sb-servicebus-01-weu-pre.servicebus.windows.net",
+            "Expect": "",
+            "Content-Type": "",
+            "Accept-Encoding": "",
+            "User-Agent": "GuzzleHttp\/7",
+            "Authorization": "SharedAccessSignature sr=https%3a%2f%2fsb-servicebus-01-weu-pre.servicebus.windows.net%2f&sig=ZytWUMmZKmTTaXtxsYh%2BH%2B%2BEdTsMtAZgBpSPzN1y4hs%3D&se=1701857285&skn=RootManageSharedAccessKey",
+            "BrokerProperties": "{\"MessageId\":\"MessageId-1234\",\"ScheduledEnqueueTimeUtc\":1701256085}",
+            "Accept": ""
+        },
+        "body": "{\"type\":\"shell\",\"action\":{\"command\":\"ls\",\"options\":[]},\"schedule\":{\"date\":\"2023-11-29 11:08:05.000000\",\"timezone_type\":3,\"timezone\":\"UTC\"},\"attempts\":0,\"queue\":\"dummy\",\"callback\":null}"
+    },
+    "response": {
+        "status": {
+            "code": 201,
+            "message": "Created"
+        },
+        "headers": {
+            "Transfer-Encoding": "chunked",
+            "Content-Type": "application\/xml; charset=utf-8",
+            "Server": "Microsoft-HTTPAPI\/2.0",
+            "Strict-Transport-Security": "max-age=31536000",
+            "Date": "Wed, 29 Nov 2023 10:32:02 GMT"
+        },
+        "curl_info": {
+            "url": "https:\/\/sb-servicebus-01-weu-pre.servicebus.windows.net\/dummy\/messages",
+            "content_type": "application\/xml; charset=utf-8",
+            "http_code": 201,
+            "header_size": 211,
+            "request_size": 613,
+            "filetime": -1,
+            "ssl_verify_result": 20,
+            "redirect_count": 0,
+            "total_time": 0.471453,
+            "namelookup_time": 0.134853,
+            "connect_time": 0.136584,
+            "pretransfer_time": 0.330095,
+            "size_upload": 184,
+            "size_download": 0,
+            "speed_download": 0,
+            "speed_upload": 390,
+            "download_content_length": -1,
+            "upload_content_length": 184,
+            "starttransfer_time": 0.471393,
+            "redirect_time": 0,
+            "redirect_url": "",
+            "primary_ip": "104.46.32.56",
+            "certinfo": [],
+            "primary_port": 443,
+            "local_ip": "192.168.1.47",
+            "local_port": 53398,
+            "http_version": 2,
+            "protocol": 2,
+            "ssl_verifyresult": 0,
+            "scheme": "HTTPS",
+            "appconnect_time_us": 329978,
+            "connect_time_us": 136584,
+            "namelookup_time_us": 134853,
+            "pretransfer_time_us": 330095,
+            "redirect_time_us": 0,
+            "starttransfer_time_us": 471393,
+            "total_time_us": 471453,
+            "effective_method": "POST"
+        }
+    },
+    "index": 0
+}]

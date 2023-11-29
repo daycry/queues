@@ -18,9 +18,6 @@ abstract class TestCase extends CIUnitTestCase
 {
     protected function setUp(): void
     {
-        defined('MOCK_TIME') || define('MOCK_TIME', 1_699_981_456);
-        defined('MESSAGEID') || define('MESSAGEID', 'MessageId-1234');
-
         $this->resetServices();
 
         parent::setUp();

@@ -58,5 +58,7 @@
 		<env name="queue.serviceBus.url" value="https://sb-servicebus-01-weu-pre.servicebus.windows.net/" force="true"/>
 		<env name="queue.serviceBus.issuer" value="RootManageSharedAccessKey" force="true"/>
 		<env name="queue.serviceBus.secret" value="8f3SOZV0chyAQtBOr+t7cLTilDGGsU7+D+ASbHWq3OI=" force="true"/>
+		<env name="MOCK_TIME" value="1701252485" force="true"/>
+		<env name="MESSAGEID" value="MessageId-1234" force="true"/>
     </php>
 </phpunit>

@@ -2,6 +2,7 @@
 
 namespace Daycry\Queues\Libraries;
 
+use CodeIgniter\I18n\Time;
 use DateTime;
 use DateTimeZone;
 
@@ -15,7 +16,7 @@ class ServiceBusHeaders
         helper('text');
 
         $messageId = ($messageId) ? $messageId : random_string('alnum', 32);
-        $messageId = defined('MESSAGEID') ? MESSAGEID : $messageId;
+        $messageId = (getenv('MESSAGEID')) ? getenv('MESSAGEID') : $messageId;
         $this->brokerProperties['MessageId'] = $messageId;
 
         return $this;
@@ -33,18 +34,20 @@ class ServiceBusHeaders
         return $this;
     }
 
-    public function schedule(DateTime $datetime)
+    public function schedule(DateTime $datetime): self
     {
-        $this->brokerProperties['ScheduledEnqueueTimeUtc'] = $datetime->setTimezone(new DateTimeZone('UTC'));
+        $this->brokerProperties['ScheduledEnqueueTimeUtc'] = $datetime->setTimezone(new DateTimeZone('UTC'))->getTimestamp();
+
+        return $this;
     }
 
     public function generateSasToken($uri, $sasKeyName, $sasKeyValue): self
     {
-        $expires = defined('MOCK_TIME') ? MOCK_TIME : time();
+        $expires = (getenv('MOCK_TIME')) ? Time::createFromTimestamp((int)getenv('MOCK_TIME')) : Time::now();
 
         $targetUri = strtolower(rawurlencode(strtolower($uri)));
         $week = 60*60*24*7;
-        $expires = $expires + $week;
+        $expires = $expires->getTimestamp() + $week;
         $toSign = $targetUri . "\n" . $expires;
         $signature = rawurlencode(base64_encode(hash_hmac(
             'sha256',

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Daycry\Queues\Queues;
 
+use DateTime;
+use DateTimeZone;
 use Daycry\Queues\Exceptions\QueueException;
 use Daycry\Queues\Interfaces\QueueInterface;
 use Daycry\Queues\Interfaces\WorkerInterface;
@@ -32,9 +34,10 @@ class ServiceBusQueue extends BaseQueue implements QueueInterface, WorkerInterfa
 
         if($this->getDelay() > 0)
         {
-            $this->serviceBusHeaders->schedule($data->schedule);
+            $datetime = new DateTime($data->schedule->date, new DateTimeZone($data->schedule->timezone));
+            $this->serviceBusHeaders->schedule($datetime);
         }
-
+        
         $response = $this->request($queue . '/messages', 'post', $data, $this->serviceBusHeaders->getHeaders());
 
         return $this->serviceBusHeaders->getMessageId();

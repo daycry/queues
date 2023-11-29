@@ -77,10 +77,12 @@ class Job
     /**
      * @param string $command
      */
-    public function command(string $command): Job
+    public function command(string $command, array|object $options = []): Job
     {
         $this->type = 'command';
-        $this->action = json_decode(json_encode(['command' => $command]));
+        $options = $this->_prepareJobOptions($options);
+
+        $this->action = json_decode(json_encode(['command' => $command, 'options' => $options]));
 
         return $this;
     }
@@ -88,10 +90,12 @@ class Job
     /**
      * @param string $command
      */
-    public function shell(string $command): Job
+    public function shell(string $command, array|object $options = []): Job
     {
         $this->type = 'shell';
-        $this->action = json_decode(json_encode(['command' => $command]));
+        $options = $this->_prepareJobOptions($options);
+
+        $this->action = json_decode(json_encode(['command' => $command, 'options' => $options]));
 
         return $this;
     }
@@ -99,10 +103,12 @@ class Job
     /**
      * @param string $name  Name of the event to trigger
      */
-    public function event(string $name): Job
+    public function event(string $name, array|object $options = []): Job
     {
         $this->type = 'event';
-        $this->action = json_decode(json_encode(['event' => $name]));
+        $options = $this->_prepareJobOptions($options);
+        
+        $this->action = json_decode(json_encode(['event' => $name, 'options' => $options]));
 
         return $this;
     }
@@ -114,10 +120,7 @@ class Job
     public function url(string $url, array|object $options = []): Job
     {
         $data = [];
-        if(!is_array($options))
-        {
-            $options = json_decode(json_encode($options),true);
-        }
+        $options = $this->_prepareJobOptions($options);
         
         $data = array_merge(['url' => $url], $options);
         $this->type = 'url';
@@ -131,7 +134,7 @@ class Job
      * @param string $method
      * @param array $options
      */
-    public function classes(string $class, string $method, array $options = []): Job
+    public function classes(string $class, string $method, array|object $options = []): Job
     {
         $data = [];
         $data['class'] = $class;
@@ -158,5 +161,20 @@ class Job
         $data = json_decode(json_encode($data));
 
         return $data;
+    }
+
+    private function _prepareJobOptions(array|object $options = [])
+    {
+        if($options)
+        {
+            if(!is_array($options))
+            {
+                $options = json_decode(json_encode($options),true);
+            }
+
+            return $options;
+        }
+
+        return [];
     }
 }

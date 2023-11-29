@@ -194,7 +194,7 @@ final class QueueServiceBusTest extends TestCase
 
         $command = 'ls';
 
-        $dateTimeObj= (new DateTime())->setTimestamp(MOCK_TIME);
+        $dateTimeObj= (new DateTime())->setTimestamp((int)getenv('MOCK_TIME'));
         $dateTimeObj->add(new DateInterval("PT1H"));
 
         $job = new Job();

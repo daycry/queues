@@ -1,1 +1,145 @@
-[]
+[{
+    "request": {
+        "method": "DELETE",
+        "url": "https:\/\/sb-servicebus-01-weu-pre.servicebus.windows.net\/dummy\/messages\/head",
+        "headers": {
+            "Host": "sb-servicebus-01-weu-pre.servicebus.windows.net",
+            "Expect": "",
+            "Content-Type": "",
+            "Accept-Encoding": "",
+            "User-Agent": "GuzzleHttp\/7",
+            "Authorization": "SharedAccessSignature sr=https%3a%2f%2fsb-servicebus-01-weu-pre.servicebus.windows.net%2f&sig=ZytWUMmZKmTTaXtxsYh%2BH%2B%2BEdTsMtAZgBpSPzN1y4hs%3D&se=1701857285&skn=RootManageSharedAccessKey",
+            "BrokerProperties": "{\"MessageId\":\"MessageId-1234\"}",
+            "Accept": ""
+        },
+        "body": "[]"
+    },
+    "response": {
+        "status": {
+            "code": 200,
+            "message": "OK"
+        },
+        "headers": {
+            "Transfer-Encoding": "chunked",
+            "Content-Type": "application\/xml; charset=utf-8",
+            "Server": "Microsoft-HTTPAPI\/2.0",
+            "BrokerProperties": "{\"DeliveryCount\":1,\"EnqueuedTimeUtc\":\"Wed, 29 Nov 2023 10:11:43 GMT\",\"MessageId\":\"MessageId-1234\",\"SequenceNumber\":208,\"State\":\"Active\",\"TimeToLive\":60}",
+            "Strict-Transport-Security": "max-age=31536000",
+            "Date": "Wed, 29 Nov 2023 10:11:43 GMT"
+        },
+        "body": "{\"type\":\"classes\",\"action\":{\"class\":\"Tests\\\\Support\\\\Classes\\\\Example\",\"method\":\"run\",\"options\":{\"constructor\":\"Contructor\",\"method\":{\"param1\":1,\"param2\":2}}},\"schedule\":null,\"attempts\":0,\"queue\":\"dummy\",\"callback\":{\"url\":\"https:\\\/\\\/httpbin.org\\\/post\",\"options\":{\"method\":\"post\",\"headers\":{\"X-API-KEY\":\"1234\"}}}}",
+        "curl_info": {
+            "url": "https:\/\/sb-servicebus-01-weu-pre.servicebus.windows.net\/dummy\/messages\/head",
+            "content_type": "application\/xml; charset=utf-8",
+            "http_code": 200,
+            "header_size": 378,
+            "request_size": 399,
+            "filetime": -1,
+            "ssl_verify_result": 20,
+            "redirect_count": 0,
+            "total_time": 0.330724,
+            "namelookup_time": 0.001829,
+            "connect_time": 0.002509,
+            "pretransfer_time": 0.262759,
+            "size_upload": 2,
+            "size_download": 312,
+            "speed_download": 943,
+            "speed_upload": 6,
+            "download_content_length": -1,
+            "upload_content_length": 2,
+            "starttransfer_time": 0.330632,
+            "redirect_time": 0,
+            "redirect_url": "",
+            "primary_ip": "104.46.32.56",
+            "certinfo": [],
+            "primary_port": 443,
+            "local_ip": "192.168.1.47",
+            "local_port": 58414,
+            "http_version": 2,
+            "protocol": 2,
+            "ssl_verifyresult": 0,
+            "scheme": "HTTPS",
+            "appconnect_time_us": 262458,
+            "connect_time_us": 2509,
+            "namelookup_time_us": 1829,
+            "pretransfer_time_us": 262759,
+            "redirect_time_us": 0,
+            "starttransfer_time_us": 330632,
+            "total_time_us": 330724,
+            "effective_method": "DELETE"
+        }
+    },
+    "index": 0
+},{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/httpbin.org\/post",
+        "headers": {
+            "Host": "httpbin.org",
+            "Expect": "",
+            "Accept-Encoding": "",
+            "User-Agent": "GuzzleHttp\/7",
+            "Content-Type": "application\/json",
+            "X-API-KEY": "1234",
+            "Accept": ""
+        },
+        "body": "{\"status\":true,\"statusCode\":200,\"data\":\"Hi Contructor method executed with this params:{\\\"param1\\\":1,\\\"param2\\\":2}\"}"
+    },
+    "response": {
+        "status": {
+            "code": 200,
+            "message": "OK"
+        },
+        "headers": {
+            "Date": "Wed, 29 Nov 2023 10:11:44 GMT",
+            "Content-Type": "application\/json",
+            "Content-Length": "663",
+            "Connection": "keep-alive",
+            "Server": "gunicorn\/19.9.0",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true"
+        },
+        "body": "{\n  \"args\": {}, \n  \"data\": \"{\\\"status\\\":true,\\\"statusCode\\\":200,\\\"data\\\":\\\"Hi Contructor method executed with this params:{\\\\\\\"param1\\\\\\\":1,\\\\\\\"param2\\\\\\\":2}\\\"}\", \n  \"files\": {}, \n  \"form\": {}, \n  \"headers\": {\n    \"Content-Length\": \"116\", \n    \"Content-Type\": \"application\/json\", \n    \"Host\": \"httpbin.org\", \n    \"User-Agent\": \"GuzzleHttp\/7\", \n    \"X-Amzn-Trace-Id\": \"Root=1-65670e60-23ce35fb3db37a5e57951afc\", \n    \"X-Api-Key\": \"1234\"\n  }, \n  \"json\": {\n    \"data\": \"Hi Contructor method executed with this params:{\\\"param1\\\":1,\\\"param2\\\":2}\", \n    \"status\": true, \n    \"statusCode\": 200\n  }, \n  \"origin\": \"136.226.214.95\", \n  \"url\": \"https:\/\/httpbin.org\/post\"\n}\n",
+        "curl_info": {
+            "url": "https:\/\/httpbin.org\/post",
+            "content_type": "application\/json",
+            "http_code": 200,
+            "header_size": 230,
+            "request_size": 254,
+            "filetime": -1,
+            "ssl_verify_result": 0,
+            "redirect_count": 0,
+            "total_time": 0.678197,
+            "namelookup_time": 0.00173,
+            "connect_time": 0.002361,
+            "pretransfer_time": 0.436186,
+            "size_upload": 116,
+            "size_download": 663,
+            "speed_download": 977,
+            "speed_upload": 171,
+            "download_content_length": 663,
+            "upload_content_length": 116,
+            "starttransfer_time": 0.678085,
+            "redirect_time": 0,
+            "redirect_url": "",
+            "primary_ip": "52.2.44.66",
+            "certinfo": [],
+            "primary_port": 443,
+            "local_ip": "192.168.1.47",
+            "local_port": 58418,
+            "http_version": 2,
+            "protocol": 2,
+            "ssl_verifyresult": 0,
+            "scheme": "HTTPS",
+            "appconnect_time_us": 435888,
+            "connect_time_us": 2361,
+            "namelookup_time_us": 1730,
+            "pretransfer_time_us": 436186,
+            "redirect_time_us": 0,
+            "starttransfer_time_us": 678085,
+            "total_time_us": 678197,
+            "effective_method": "POST"
+        }
+    },
+    "index": 0
+}]
