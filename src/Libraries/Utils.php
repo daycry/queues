@@ -3,6 +3,7 @@
 namespace Daycry\Queues\Libraries;
 
 use Config\Services;
+use Daycry\Queues\Config\Validation;
 use Daycry\Queues\Exceptions\JobException;
 use Daycry\Queues\Exceptions\QueueException;
 
@@ -15,7 +16,7 @@ class Utils
             $data = json_decode(json_encode($data), true);
         }
 
-        $validator = Services::validation(null, false);
+        $validator = Services::validation(config(Validation::class), false);
 
         if (!$validator->reset()->run($data, $rule) ) {
             throw JobException::validationError($validator->listErrors());
