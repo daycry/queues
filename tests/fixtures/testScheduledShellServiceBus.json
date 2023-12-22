@@ -68,4 +68,75 @@
         }
     },
     "index": 0
+},{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/sb-servicebus-01-weu-pre.servicebus.windows.net\/dummy\/messages",
+        "headers": {
+            "Host": "sb-servicebus-01-weu-pre.servicebus.windows.net",
+            "Expect": "",
+            "Content-Type": "",
+            "Accept-Encoding": "",
+            "User-Agent": "GuzzleHttp\/7",
+            "Authorization": "SharedAccessSignature sr=https%3a%2f%2fsb-servicebus-01-weu-pre.servicebus.windows.net%2f&sig=ZytWUMmZKmTTaXtxsYh%2BH%2B%2BEdTsMtAZgBpSPzN1y4hs%3D&se=1701857285&skn=RootManageSharedAccessKey",
+            "BrokerProperties": "{\"MessageId\":\"MessageId-1234\"}",
+            "Accept": ""
+        },
+        "body": "{\"type\":\"shell\",\"action\":{\"command\":\"ls\",\"options\":[]},\"schedule\":{\"date\":\"2023-11-29 11:08:05.000000\",\"timezone_type\":3,\"timezone\":\"UTC\"},\"attempts\":0,\"queue\":\"dummy\",\"callback\":null}"
+    },
+    "response": {
+        "status": {
+            "code": 401,
+            "message": "Unauthorized"
+        },
+        "headers": {
+            "Transfer-Encoding": "chunked",
+            "Content-Type": "application\/xml; charset=utf-8",
+            "Server": "Microsoft-HTTPAPI\/2.0",
+            "Strict-Transport-Security": "max-age=31536000",
+            "Date": "Fri, 22 Dec 2023 09:33:33 GMT"
+        },
+        "body": "<Error><Code>401<\/Code><Detail>ExpiredToken: The token is expired. Expiration time: '2023-12-06 10:08:05Z'. TrackingId:da12c24d-d405-41aa-9d27-e7cad95cbfe4_G33, SystemTracker:sb-servicebus-01-weu-pre.servicebus.windows.net:dummy\/messages, Timestamp:2023-12-22T09:33:33<\/Detail><\/Error>",
+        "curl_info": {
+            "url": "https:\/\/sb-servicebus-01-weu-pre.servicebus.windows.net\/dummy\/messages",
+            "content_type": "application\/xml; charset=utf-8",
+            "http_code": 401,
+            "header_size": 216,
+            "request_size": 576,
+            "filetime": -1,
+            "ssl_verify_result": 20,
+            "redirect_count": 0,
+            "total_time": 0.720292,
+            "namelookup_time": 0.059145,
+            "connect_time": 0.060669,
+            "pretransfer_time": 0.638822,
+            "size_upload": 184,
+            "size_download": 285,
+            "speed_download": 395,
+            "speed_upload": 255,
+            "download_content_length": -1,
+            "upload_content_length": 184,
+            "starttransfer_time": 0.720199,
+            "redirect_time": 0,
+            "redirect_url": "",
+            "primary_ip": "104.46.32.56",
+            "certinfo": [],
+            "primary_port": 443,
+            "local_ip": "192.168.240.118",
+            "local_port": 53808,
+            "http_version": 2,
+            "protocol": 2,
+            "ssl_verifyresult": 0,
+            "scheme": "HTTPS",
+            "appconnect_time_us": 638640,
+            "connect_time_us": 60669,
+            "namelookup_time_us": 59145,
+            "pretransfer_time_us": 638822,
+            "redirect_time_us": 0,
+            "starttransfer_time_us": 720199,
+            "total_time_us": 720292,
+            "effective_method": "POST"
+        }
+    },
+    "index": 0
 }]

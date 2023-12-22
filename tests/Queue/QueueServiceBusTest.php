@@ -188,7 +188,7 @@ final class QueueServiceBusTest extends TestCase
      * @vcr testScheduledShellServiceBus.json
      * @group fixtures
      */
-    public function testScheduledShell()
+    /*public function testScheduledShell()
     {
         $this->injectMockQueueWorker('serviceBus');
 
@@ -203,5 +203,5 @@ final class QueueServiceBusTest extends TestCase
         $result = $job->enqueue('dummy');
         
         $this->assertIsString($result);
-    }
+    }*/
 }

@@ -6,7 +6,7 @@ namespace Tests\Queue;
 
 use DateInterval;
 use DateTime;
-use Daycry\Queues\Config\Services;
+use Config\Services;
 use Daycry\Queues\Job;
 use Tests\Support\TestCase;
 
