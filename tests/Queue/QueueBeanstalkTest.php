@@ -33,7 +33,7 @@ final class QueueBeanstalkTest extends TestCase
         $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' => ['X-API-KEY' => '1234']]);
         $result = $job->enqueue('default');
 
-        $this->assertInstanceOf(JobId::class, $result);
+        $this->assertEquals('string', gettype($result));
     }
 
     public function testWorkerClasses()
@@ -57,7 +57,7 @@ final class QueueBeanstalkTest extends TestCase
         $job->setPriority(10)->setTtr(3600);
         $result = $job->enqueue('default');
 
-        $this->assertInstanceOf(JobId::class, $result);
+        $this->assertEquals('string', gettype($result));
     }
 
     public function testWorkerCommand()
@@ -79,7 +79,7 @@ final class QueueBeanstalkTest extends TestCase
         $job->shell($command);
         $result = $job->enqueue('default');
 
-        $this->assertInstanceOf(JobId::class, $result);
+        $this->assertEquals('string', gettype($result));
     }
 
     public function testWorkerShell()
@@ -101,7 +101,7 @@ final class QueueBeanstalkTest extends TestCase
         $job->event($command);
         $result = $job->enqueue('default');
 
-        $this->assertInstanceOf(JobId::class, $result);
+        $this->assertEquals('string', gettype($result));
     }
 
     public function testWorkerEvent()
@@ -133,7 +133,7 @@ final class QueueBeanstalkTest extends TestCase
         $job->url($url, $options);
         $result = $job->enqueue('default');
 
-        $this->assertInstanceOf(JobId::class, $result);
+        $this->assertEquals('string', gettype($result));
     }
 
     public function testWorkerUrl()
@@ -160,6 +160,6 @@ final class QueueBeanstalkTest extends TestCase
         $job->scheduled($dateTimeObj);
         $result = $job->enqueue('default');
 
-        $this->assertInstanceOf(JobId::class, $result);
+        $this->assertEquals('string', gettype($result));
     }
 }

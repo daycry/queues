@@ -33,7 +33,7 @@ class BeanstalkQueue extends BaseQueue implements QueueInterface, WorkerInterfac
 
         $this->calculateDelay($data);
 
-        return $this->connection->put(\json_encode($data), $this->getPriority(), $this->getDelay(), $this->getTtr());
+        return $this->connection->put(\json_encode($data), $this->getPriority(), $this->getDelay(), $this->getTtr())->getId();
     }
 
     public function watch(string $queue)
