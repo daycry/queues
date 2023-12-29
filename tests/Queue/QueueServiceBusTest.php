@@ -49,7 +49,7 @@ final class QueueServiceBusTest extends TestCase
 
         command('queues:worker dummy --oneTime');
 
-        $this->assertEquals('Commands can output text.', Services::response()->getBody());
+        $this->assertEquals('Commands can output text. []', Services::response()->getBody());
     }
 
     /**
