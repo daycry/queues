@@ -28,11 +28,11 @@ final class QueueSyncTest extends TestCase
         $command = 'job:test';
 
         $job = new Job();
-        $job->command($command);
+        $job->command($command, ['param' => 1]);
         $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' =>['X-API-KEY' => '1234']]);
         $result = $job->enqueue('default');
 
-        $this->assertEquals($result, 'Commands can output text.');
+        $this->assertEquals($result, 'Commands can output text. {"param":"1"}');
     }
 
     public function testClasses()

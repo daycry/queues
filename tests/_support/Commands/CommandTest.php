@@ -16,6 +16,6 @@ final class CommandTest extends BaseCommand
 
     public function run(array $params = [])
     {
-        echo 'Commands can output text.';
+        echo 'Commands can output text. ' . json_encode($params);
     }
 }

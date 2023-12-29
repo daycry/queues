@@ -41,7 +41,7 @@ final class QueueRedisTest extends TestCase
 
         command('queues:worker default --oneTime');
 
-        $this->assertEquals('Commands can output text.', Services::response()->getBody());
+        $this->assertEquals('Commands can output text. []', Services::response()->getBody());
     }
 
     public function testClasses()

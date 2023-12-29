@@ -37,7 +37,15 @@ trait ExecutableTrait
      */
     protected function runCommand(): mixed
     {
-        return command($this->getAction()->command);
+        $params = '';
+        if($this->getAction()->options)
+        {
+            foreach($this->getAction()->options as $option => $value)
+            {
+                $params = $params . ' -' . $option . ' ' . $value;
+            }
+        }
+        return command($this->getAction()->command. $params);
     }
 
     /**

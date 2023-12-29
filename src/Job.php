@@ -41,6 +41,7 @@ class Job
                 {
                     if( $this->{$attribute} instanceof DateTime )
                     {
+                        dd($attribute);
                         $this->schedule = new DateTime($value->date, new DateTimeZone($value->timezone));
                     }
 

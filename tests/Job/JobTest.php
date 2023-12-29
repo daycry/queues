@@ -25,7 +25,7 @@ final class JobTest extends TestCase
     public function testCommand()
     {
         $name = 'job:test';
-        $command = json_decode(json_encode(['command' => $name, 'options' => []]));
+        $command = json_decode(json_encode(['command' => $name, 'options' => ['param' => 1]]));
 
         $callback = new stdClass();
         $callback->url = 'https://httpbin.org/post';
@@ -40,7 +40,7 @@ final class JobTest extends TestCase
         $objectExpected->queue = null;
 
         $job = new Job();
-        $job->command($name);
+        $job->command($name, ['param' => 1]);
         $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' =>['X-API-KEY' => '1234']]);
 
         $this->assertSame('command', $job->getType());
