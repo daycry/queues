@@ -22,5 +22,5 @@ class QueueException extends RuntimeException
     {
         return new self($error);
     }
-    
+
 }

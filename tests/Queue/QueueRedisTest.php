@@ -50,7 +50,7 @@ final class QueueRedisTest extends TestCase
 
         $job = new Job();
         $job->classes(\Tests\Support\Classes\Example::class, 'run', ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]);
-        $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' =>['X-API-KEY' => '1234']]);
+        $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' => ['X-API-KEY' => '1234']]);
         $result = $job->enqueue('default');
 
         $this->assertIsInt($result);
@@ -75,7 +75,7 @@ final class QueueRedisTest extends TestCase
         $job = new Job();
         $job->shell($command);
         $result = $job->enqueue('default');
-        
+
         $this->assertIsInt($result);
     }
 
@@ -113,7 +113,7 @@ final class QueueRedisTest extends TestCase
     public function testUrl()
     {
         $this->injectMockQueueWorker('redis');
-        
+
         $url = 'https://httpbin.org/post';
 
         $options = [
@@ -149,14 +149,14 @@ final class QueueRedisTest extends TestCase
 
         $command = 'ls';
 
-        $dateTimeObj= new DateTime('now');
+        $dateTimeObj = new DateTime('now');
         $dateTimeObj->add(new DateInterval("PT1H"));
 
         $job = new Job();
         $job->shell($command);
         $job->scheduled($dateTimeObj);
         $result = $job->enqueue('default');
-        
+
         $this->assertIsInt($result);
     }
 }

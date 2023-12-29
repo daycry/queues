@@ -27,17 +27,16 @@ class ServiceBusQueue extends BaseQueue implements QueueInterface, WorkerInterfa
         $this->url = $config['url'];
         $this->serviceBusHeaders = (new LibrariesServiceBusHeaders())->generateMessageId()->generateSasToken($this->url, $config['issuer'], $config['secret']);
     }
-    
+
     public function enqueue(object $data, string $queue = 'default')
     {
         $this->calculateDelay($data);
 
-        if($this->getDelay() > 0)
-        {
+        if($this->getDelay() > 0) {
             $datetime = new DateTime($data->schedule->date, new DateTimeZone($data->schedule->timezone));
             $this->serviceBusHeaders->schedule($datetime);
         }
-        
+
         $response = $this->request($queue . '/messages', 'post', $data, $this->serviceBusHeaders->getHeaders());
 
         return $this->serviceBusHeaders->getMessageId();
@@ -65,8 +64,7 @@ class ServiceBusQueue extends BaseQueue implements QueueInterface, WorkerInterfa
 
     public function removeJob(QueuesJob $job, bool $recreate = false): bool
     {
-        if($recreate === true)
-        {
+        if($recreate === true) {
             $job->addAttempt();
             $job->enqueue($job->getQueue());
         }
@@ -93,8 +91,7 @@ class ServiceBusQueue extends BaseQueue implements QueueInterface, WorkerInterfa
         try {
             $response = $client->send($request, ['timeout' => 10]);
 
-            if( $response )
-            {
+            if($response) {
                 return [
                     'body' => json_decode($response->getBody()->getContents()),
                     'status' => $response->getStatusCode(),

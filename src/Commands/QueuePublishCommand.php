@@ -11,7 +11,7 @@ class QueuePublishCommand extends BaseCommand
     protected $group = 'Queues';
 
     protected $name = 'queues:publish';
-    
+
     protected $description = 'Publish config file.';
 
     protected $usage = 'queues:publish';

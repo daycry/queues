@@ -27,16 +27,24 @@ class QueueWorkerCommand extends BaseCommand
 
     protected bool $locked = false;
 
-    protected function earlyChecks(Job $job): void {}
+    protected function earlyChecks(Job $job): void
+    {
+    }
 
-    protected function lateChecks(Job $job): void {}
+    protected function lateChecks(Job $job): void
+    {
+    }
 
-    protected function earlyCallbackChecks(Job $job): void {}
+    protected function earlyCallbackChecks(Job $job): void
+    {
+    }
 
-    protected function lateCallbackChecks(Job $job): void {}
+    protected function lateCallbackChecks(Job $job): void
+    {
+    }
 
     public function run(array $params)
-    {   
+    {
         $queue = $params[0] ?? CLI::getOption('queue');
 
         //CLI::write('Queue "'. $queue .'" started successfully.', 'green');
@@ -52,8 +60,7 @@ class QueueWorkerCommand extends BaseCommand
         }
         // @codeCoverageIgnoreEnd
 
-        while(true)
-        {
+        while(true) {
             $queues = Utils::parseConfigFile(service('settings')->get('Queue.queues'));
 
             $response = [];
@@ -61,12 +68,11 @@ class QueueWorkerCommand extends BaseCommand
             Services::resetSingle('request');
             Services::resetSingle('response');
 
-            try{
+            try {
                 $workers = service('settings')->get('Queue.workers');
                 $worker = service('settings')->get('Queue.worker');
-                    
-                if(!array_key_exists($worker, $workers))
-                {
+
+                if(!array_key_exists($worker, $workers)) {
                     throw QueueException::forInvalidWorker($worker);
                 }
 
@@ -74,8 +80,7 @@ class QueueWorkerCommand extends BaseCommand
 
                 $job = $worker->watch($queue);
 
-                if($job)
-                {
+                if($job) {
                     $this->locked = true;
 
                     $dataJob = $worker->getDataJob();
@@ -87,8 +92,7 @@ class QueueWorkerCommand extends BaseCommand
 
                     $response['status'] = true;
 
-                    if(!$result instanceof Response)
-                    {
+                    if(!$result instanceof Response) {
                         $result = (Services::response(null, true))->setStatusCode(200)->setBody($result);
                     }
 
@@ -107,17 +111,14 @@ class QueueWorkerCommand extends BaseCommand
                 $this->showError($e);
             }
 
-            if($response)
-            {
+            if($response) {
                 try {
-                    if($response['status'] === true || $job->getAttempt() >= service('settings')->get('Queue.maxAttempts'))
-                    {
+                    if($response['status'] === true || $job->getAttempt() >= service('settings')->get('Queue.maxAttempts')) {
                         $worker->removeJob($j, false);
                     }
 
                     //callback
-                    if($cb = $j->getCallback())
-                    {
+                    if($cb = $j->getCallback()) {
                         $cb->options->body = $response;
                         $c = new Job();
                         $c->url($cb->url, $cb->options);
@@ -140,7 +141,7 @@ class QueueWorkerCommand extends BaseCommand
             if ($oneTime) {
                 return;
             }
-            
+
         }
     }
 }

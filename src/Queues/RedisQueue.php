@@ -18,17 +18,17 @@ class RedisQueue extends BaseQueue implements QueueInterface, WorkerInterface
     /**
      * Queue waiting for consumption
      */
-    const QUEUE_WAITING = '{redis-queue}-waiting';
+    public const QUEUE_WAITING = '{redis-queue}-waiting';
 
     /**
      * Queue with delayed consumption
      */
-    const QUEUE_DELAYED = '{redis-queue}-delayed';
+    public const QUEUE_DELAYED = '{redis-queue}-delayed';
 
     /**
      * Queue with consumption failure
      */
-    const QUEUE_FAILED = '{redis-queue}-failed';
+    public const QUEUE_FAILED = '{redis-queue}-failed';
 
     protected Redis $connection;
 
@@ -99,8 +99,7 @@ class RedisQueue extends BaseQueue implements QueueInterface, WorkerInterface
     {
         $job = $this->connection->rpop($queue);
 
-        if($job)
-        {
+        if($job) {
             return $this->job = \json_decode($job);
         }
 
@@ -114,14 +113,13 @@ class RedisQueue extends BaseQueue implements QueueInterface, WorkerInterface
 
     public function removeJob(QueuesJob $job, bool $recreate = false): bool
     {
-        if($recreate === true)
-        {
+        if($recreate === true) {
             //$this->connection->release($this->job);
             $job->addAttempt();
             $job->enqueue($job->getQueue());
         }
         $this->job = null;
-        
+
         return true;
     }
 
@@ -137,9 +135,8 @@ class RedisQueue extends BaseQueue implements QueueInterface, WorkerInterface
         if ($items === false) {
             throw QueueException::forInvalidConnection($this->connection->error());
         }
-        
-        foreach ($items as $packageStr)
-        {
+
+        foreach ($items as $packageStr) {
             $this->connection->zRem(service('settings')->get('Cache.prefix') . $parser->setData(['redis-queue' => $queue])->renderString(static::QUEUE_DELAYED), $packageStr, function ($result) use ($packageStr, $queue, $parser) {
                 if ($result !== 1) {
                     return;

@@ -46,7 +46,7 @@ class ServiceBusHeaders
         $expires = (getenv('MOCK_TIME')) ? Time::createFromTimestamp((int)getenv('MOCK_TIME')) : Time::now();
 
         $targetUri = strtolower(rawurlencode(strtolower($uri)));
-        $week = 60*60*24*7;
+        $week = 60 * 60 * 24 * 7;
         $expires = $expires->getTimestamp() + $week;
         $toSign = $targetUri . "\n" . $expires;
         $signature = rawurlencode(base64_encode(hash_hmac(

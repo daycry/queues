@@ -62,7 +62,7 @@ final class QueueServiceBusTest extends TestCase
 
         $job = new Job();
         $job->classes(\Tests\Support\Classes\Example::class, 'run', ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]);
-        $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' =>['X-API-KEY' => '1234']]);
+        $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' => ['X-API-KEY' => '1234']]);
         $result = $job->enqueue('dummy');
 
         $this->assertIsString($result);
@@ -96,7 +96,7 @@ final class QueueServiceBusTest extends TestCase
         $job->shell($command);
         $job->setLabel('test-shell');
         $result = $job->enqueue('dummy');
-        
+
         $this->assertIsString($result);
     }
 
@@ -150,7 +150,7 @@ final class QueueServiceBusTest extends TestCase
     public function testUrl()
     {
         $this->injectMockQueueWorker('serviceBus');
-        
+
         $url = 'https://httpbin.org/post';
 
         $options = [
@@ -201,7 +201,7 @@ final class QueueServiceBusTest extends TestCase
         $job->shell($command);
         $job->scheduled($dateTimeObj);
         $result = $job->enqueue('dummy');
-        
+
         $this->assertIsString($result);
     }*/
 }

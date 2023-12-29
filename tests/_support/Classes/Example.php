@@ -2,7 +2,6 @@
 
 namespace Tests\Support\Classes;
 
-
 class Example
 {
     private ?string $paramConstruct = null;

@@ -12,7 +12,7 @@ class JobException extends RuntimeException
     {
         return new self(lang('Job.invalidJobType', [ $type ]));
     }
-    
+
     public static function forInvalidMethod(string $method)
     {
         return new self(lang('HTTP.methodNotFound', [$method]));

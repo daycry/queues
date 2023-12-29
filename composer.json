@@ -25,7 +25,7 @@
         "codeigniter4/devkit": "^1.1",
         "codeigniter4/framework": "^4",
         "fakerphp/faker": "^1.9",
-        "friendsofphp/php-cs-fixer": "3.6.*",
+        "friendsofphp/php-cs-fixer": "^3.6",
         "mikey179/vfsstream": "^1.6",
         "nexusphp/cs-config": "^3.3",
         "nexusphp/tachycardia": "^1.0",
@@ -72,7 +72,8 @@
             "Composer\\Config::disableProcessTimeout",
             "vendor/bin/phpunit --exclude-group fixtures --coverage-php build/coverage/no-fixtures.cov",
             "vendor/bin/phpunit --group fixtures --coverage-php build/coverage/fixtures.cov",
-            "vendor/bin/phpcov merge --clover build/logs/clover.xml build/coverage --html build/logs/html"
+            "vendor/bin/phpcov merge --clover build/logs/clover.xml build/coverage --html build/logs/html",
+            "@cs"
         ],
         "phpcpd": [
             "php phpcpd.phar src/"

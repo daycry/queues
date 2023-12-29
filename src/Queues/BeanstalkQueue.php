@@ -24,10 +24,10 @@ class BeanstalkQueue extends BaseQueue implements QueueInterface, WorkerInterfac
 
         $this->connection = Pheanstalk::create($config['host'], $config['port']);
     }
-    
+
     public function enqueue(object $data, string $queue = 'default')
     {
-        $tube = new TubeName( $queue );
+        $tube = new TubeName($queue);
 
         $this->connection->useTube($tube);
 
@@ -38,7 +38,7 @@ class BeanstalkQueue extends BaseQueue implements QueueInterface, WorkerInterfac
 
     public function watch(string $queue)
     {
-        $tube = new TubeName( $queue );
+        $tube = new TubeName($queue);
         $this->connection->watch($tube);
 
         $this->job = $this->connection->reserveWithTimeout(50);
@@ -50,8 +50,7 @@ class BeanstalkQueue extends BaseQueue implements QueueInterface, WorkerInterfac
     {
         $this->connection->delete($this->job);
 
-        if($recreate === true)
-        {
+        if($recreate === true) {
             //$this->connection->release($this->job);
             $job->addAttempt();
             $job->enqueue($job->getQueue());

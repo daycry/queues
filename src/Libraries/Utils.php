@@ -11,14 +11,13 @@ class Utils
 {
     public static function checkDataQueue(array|object $data, string $rule)
     {
-        if(!is_array($data))
-        {
+        if(!is_array($data)) {
             $data = json_decode(json_encode($data), true);
         }
 
         $validator = Services::validation(config(Validation::class), false);
 
-        if (!$validator->reset()->run($data, $rule) ) {
+        if (!$validator->reset()->run($data, $rule)) {
             throw JobException::validationError($validator->listErrors());
         }
     }

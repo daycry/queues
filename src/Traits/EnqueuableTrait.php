@@ -23,8 +23,7 @@ trait EnqueuableTrait
     {
         $queues = Utils::parseConfigFile(service('settings')->get('Queue.queues'));
 
-        if(!in_array($queue, $queues))
-        {
+        if(!in_array($queue, $queues)) {
             throw QueueException::forInvalidQueue($queue);
         }
 
@@ -57,11 +56,10 @@ trait EnqueuableTrait
     {
         $this->attempts = $this->attempts + 1;
 
-        if($this->schedule != null)
-        {
+        if($this->schedule != null) {
             $this->scheduled((new DateTime())->add(new DateInterval('PT1H')));
         }
-        
+
         return $this;
     }
 
@@ -98,7 +96,7 @@ trait EnqueuableTrait
     {
         if ($this->worker && method_exists($this->worker, $method)) {
             return $this->worker->{$method}(...$args);
-        }else{
+        } else {
             throw JobException::forInvalidMethod($method);
         }
     }
@@ -107,9 +105,8 @@ trait EnqueuableTrait
     {
         $workers = service('settings')->get('Queue.workers');
         $worker = service('settings')->get('Queue.worker');
-            
-        if(!array_key_exists($worker, $workers))
-        {
+
+        if(!array_key_exists($worker, $workers)) {
             throw QueueException::forInvalidWorker($worker);
         }
 

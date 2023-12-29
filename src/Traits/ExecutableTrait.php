@@ -38,10 +38,8 @@ trait ExecutableTrait
     protected function runCommand(): mixed
     {
         $params = '';
-        if($this->getAction()->options)
-        {
-            foreach($this->getAction()->options as $option => $value)
-            {
+        if($this->getAction()->options) {
+            foreach($this->getAction()->options as $option => $value) {
                 $params = $params . ' -' . $option . ' ' . $value;
             }
         }
@@ -84,7 +82,7 @@ trait ExecutableTrait
         $class = ($inConstructor) ? new $class($this->getAction()->options->constructor) : new $class();
 
         $return = ($inMethod) ? $class->{$this->getAction()->method}($this->getAction()->options->method) : $class->{$this->getAction()->method}();
-        
+
         return $return;
     }
 
@@ -118,7 +116,7 @@ trait ExecutableTrait
         try {
             $client = new Client();
             $response = $client->request(\strtoupper($data->method), $data->url, $options);
-        // @codeCoverageIgnoreStart
+            // @codeCoverageIgnoreStart
         } catch(RequestException $ex) {
             $response = $ex->getResponse();
 

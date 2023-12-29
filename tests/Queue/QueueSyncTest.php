@@ -29,7 +29,7 @@ final class QueueSyncTest extends TestCase
 
         $job = new Job();
         $job->command($command, ['param' => 1]);
-        $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' =>['X-API-KEY' => '1234']]);
+        $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' => ['X-API-KEY' => '1234']]);
         $result = $job->enqueue('default');
 
         $this->assertEquals($result, 'Commands can output text. {"param":"1"}');
@@ -39,7 +39,7 @@ final class QueueSyncTest extends TestCase
     {
         $job = new Job();
         $job->classes(\Tests\Support\Classes\Example::class, 'run', ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]);
-        $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' =>['X-API-KEY' => '1234']]);
+        $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' => ['X-API-KEY' => '1234']]);
         $result = $job->enqueue('default');
 
         $this->assertEquals($result, 'Hi Contructor method executed with this params:{"param1":1,"param2":2}');

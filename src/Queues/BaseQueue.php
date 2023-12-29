@@ -12,8 +12,7 @@ abstract class BaseQueue
 
     public function calculateDelay(object $data): void
     {
-        if(isset($data->schedule))
-        {
+        if(isset($data->schedule)) {
             $now = new DateTime('now');
             $schedule = new DateTime($data->schedule->date);
 

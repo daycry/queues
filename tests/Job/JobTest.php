@@ -41,7 +41,7 @@ final class JobTest extends TestCase
 
         $job = new Job();
         $job->command($name, ['param' => 1]);
-        $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' =>['X-API-KEY' => '1234']]);
+        $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' => ['X-API-KEY' => '1234']]);
 
         $this->assertSame('command', $job->getType());
         $this->assertEquals($command, $job->getAction());
@@ -51,7 +51,7 @@ final class JobTest extends TestCase
     public function testInvalidMethod()
     {
         $this->expectException(JobException::class);
-        
+
         $name = 'job:test';
         $command = json_decode(json_encode(['command' => $name, 'options' => []]));
 

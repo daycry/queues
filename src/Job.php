@@ -33,14 +33,10 @@ class Job
 
         $this->checkWorker();
 
-        if($data)
-        {
-            foreach($data as $attribute => $value)
-            {
-                if(property_exists($this, $attribute))
-                {
-                    if( $this->{$attribute} instanceof DateTime )
-                    {
+        if($data) {
+            foreach($data as $attribute => $value) {
+                if(property_exists($this, $attribute)) {
+                    if($this->{$attribute} instanceof DateTime) {
                         dd($attribute);
                         $this->schedule = new DateTime($value->date, new DateTimeZone($value->timezone));
                     }
@@ -108,7 +104,7 @@ class Job
     {
         $this->type = 'event';
         $options = $this->_prepareJobOptions($options);
-        
+
         $this->action = json_decode(json_encode(['event' => $name, 'options' => $options]));
 
         return $this;
@@ -122,7 +118,7 @@ class Job
     {
         $data = [];
         $options = $this->_prepareJobOptions($options);
-        
+
         $data = array_merge(['url' => $url], $options);
         $this->type = 'url';
         $this->action = json_decode(json_encode($data));
@@ -141,7 +137,7 @@ class Job
         $data['class'] = $class;
         $data['method'] = $method;
         $data['options'] = $options;
-        
+
         $this->type = 'classes';
         $this->action = json_decode(json_encode($data));
 
@@ -166,11 +162,9 @@ class Job
 
     private function _prepareJobOptions(array|object $options = [])
     {
-        if($options)
-        {
-            if(!is_array($options))
-            {
-                $options = json_decode(json_encode($options),true);
+        if($options) {
+            if(!is_array($options)) {
+                $options = json_decode(json_encode($options), true);
             }
 
             return $options;
