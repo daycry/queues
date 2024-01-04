@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Daycry\Queues;
 
+use CodeIgniter\I18n\Time;
 use DateTime;
 use DateTimeZone;
 use Daycry\Queues\Exceptions\JobException;
@@ -144,8 +145,12 @@ class Job
         return $this;
     }
 
-    public function scheduled(DateTime $schedule)
+    public function scheduled(DateTime|Time $schedule)
     {
+        if($schedule instanceof Time) {
+            $schedule = $schedule->toDateTime();
+        }
+
         $this->schedule = $schedule;
 
         return $this;
