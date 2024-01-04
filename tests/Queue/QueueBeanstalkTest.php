@@ -42,8 +42,10 @@ final class QueueBeanstalkTest extends TestCase
 
         command('queues:worker default --oneTime');
 
-        $this->assertSame('https://httpbin.org/post', Services::response()->getBody()->url);
-        $this->assertEquals('Hi Contructor method executed with this params:{"param1":1,"param2":2}', Services::response()->getBody()->json->data);
+        /** @var object $body */
+        $body = Services::response()->getBody();
+        $this->assertSame('https://httpbin.org/post', $body->url);
+        $this->assertEquals('Hi Contructor method executed with this params:{"param1":1,"param2":2}', $body->json->data);
     }
 
     public function testCommand()
@@ -88,7 +90,9 @@ final class QueueBeanstalkTest extends TestCase
 
         command('queues:worker default --oneTime');
 
-        $this->assertContains('src', Services::response()->getBody());
+        /** @var array $body */
+        $body = Services::response()->getBody();
+        $this->assertContains('src', $body);
     }
 
     public function testEvent()
@@ -139,11 +143,14 @@ final class QueueBeanstalkTest extends TestCase
     public function testWorkerUrl()
     {
         $this->injectMockQueueWorker('beanstalk');
-
         command('queues:worker default --oneTime');
 
-        $this->assertSame('https://httpbin.org/post', Services::response()->getBody()->url);
-        $this->assertEquals('p1', Services::response()->getBody()->json->param1);
+        $this->assertIsObject(Services::response()->getBody());
+
+        /** @var object $response */
+        $response = Services::response()->getBody();
+        $this->assertSame('https://httpbin.org/post', $response->url);
+        $this->assertEquals('p1', $response->json->param1);
     }
 
     public function testScheduledShell()
