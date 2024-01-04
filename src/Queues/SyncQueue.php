@@ -7,7 +7,7 @@ namespace Daycry\Queues\Queues;
 use Daycry\Queues\Interfaces\QueueInterface;
 use Daycry\Queues\Job;
 
-class SyncQueue implements QueueInterface
+class SyncQueue extends BaseQueue implements QueueInterface
 {
     public function enqueue(object $data, string $queue = 'default')
     {

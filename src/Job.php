@@ -11,8 +11,6 @@ use Daycry\Queues\Exceptions\JobException;
 use Daycry\Queues\Traits\CallableTrait;
 use Daycry\Queues\Traits\EnqueuableTrait;
 use Daycry\Queues\Traits\ExecutableTrait;
-use ReflectionFunction;
-use SplFileObject;
 
 class Job
 {
@@ -37,12 +35,13 @@ class Job
         if($data) {
             foreach($data as $attribute => $value) {
                 if(property_exists($this, $attribute)) {
-                    if($this->{$attribute} instanceof DateTime) {
-                        dd($attribute);
-                        $this->schedule = new DateTime($value->date, new DateTimeZone($value->timezone));
+                    if($attribute == 'schedule') {
+                        if($value && $value instanceof object) {
+                            $this->{$attribute} = new DateTime($value->date, new DateTimeZone($value->timezone));
+                        }
+                    } else {
+                        $this->{$attribute} = $value;
                     }
-
-                    $this->{$attribute} = $value;
                 }
             }
 

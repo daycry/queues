@@ -10,6 +10,7 @@ use Daycry\Queues\Exceptions\QueueException;
 use Daycry\Queues\Job;
 use Tests\Support\TestCase;
 use stdClass;
+use DateTime;
 
 final class QueueSyncTest extends TestCase
 {
@@ -79,6 +80,18 @@ final class QueueSyncTest extends TestCase
         $command = 'ls';
 
         $job = new Job();
+        $job->shell($command);
+        $result = $job->enqueue('default');
+
+        $this->assertTrue(in_array('src', $result));
+    }
+
+    public function testShellScheduled()
+    {
+        $command = 'ls';
+
+        $job = new Job();
+        $job->scheduled(new DateTime('now'));
         $job->shell($command);
         $result = $job->enqueue('default');
 
