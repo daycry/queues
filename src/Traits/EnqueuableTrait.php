@@ -19,9 +19,11 @@ trait EnqueuableTrait
 
     private QueueInterface $worker;
 
-    public function enqueue(string $queue)
+    public function enqueue(?string $queue = null)
     {
         $queues = Utils::parseConfigFile(service('settings')->get('Queue.queues'));
+
+        $queue = $queue ?? $this->queue;
 
         if(!in_array($queue, $queues)) {
             throw QueueException::forInvalidQueue($queue);
