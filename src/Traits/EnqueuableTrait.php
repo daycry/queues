@@ -25,6 +25,11 @@ trait EnqueuableTrait
 
         $queue = $queue ?? $this->queue;
 
+        if($queue === null) {
+            $this->setToDefaultQueue();
+            $queue = $this->queue;
+        }
+
         if(!in_array($queue, $queues)) {
             throw QueueException::forInvalidQueue($queue);
         }
@@ -85,6 +90,15 @@ trait EnqueuableTrait
     public function getQueue(): string
     {
         return $this->queue;
+    }
+
+    public function setToDefaultQueue(): self
+    {
+        $queues = Utils::parseConfigFile(service('settings')->get('Queue.queues'));
+
+        $this->queue = $queues[0];
+
+        return $this;
     }
 
     /**

@@ -158,7 +158,8 @@ final class QueueBeanstalkTest extends TestCase
         $job = new Job();
         $job->shell($command);
         $job->scheduled($dateTimeObj);
-        $result = $job->enqueue('default');
+        $job->setToDefaultQueue();
+        $result = $job->enqueue();
 
         $this->assertEquals('string', gettype($result));
     }
