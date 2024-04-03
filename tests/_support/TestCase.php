@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Support;
 
-use CodeIgniter\Config\Factories;
-use Daycry\Settings\Config\Settings as ConfigSettings;
-use Daycry\Settings\Settings;
+use CodeIgniter\Settings\Config\Settings as ConfigSettings;
+use CodeIgniter\Settings\Settings;
 use CodeIgniter\Test\CIUnitTestCase;
 use Config\Services;
-use Daycry\Queues\Config\Queue;
 
 /**
  * @internal

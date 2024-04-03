@@ -22,7 +22,7 @@ final class QueueRedisTest extends TestCase
         parent::tearDown();
     }
 
-    public function testCommand()
+    public function testWorkerCommand()
     {
         $this->injectMockQueueWorker('redis');
 
@@ -33,18 +33,13 @@ final class QueueRedisTest extends TestCase
         $result = $job->enqueue('default');
 
         $this->assertIsInt($result);
-    }
-
-    public function testWorkerCommand()
-    {
-        $this->injectMockQueueWorker('redis');
 
         command('queues:worker default --oneTime');
 
         $this->assertEquals('Commands can output text. []', Services::response()->getBody());
     }
 
-    public function testClasses()
+    public function testWorkerClasses()
     {
         $this->injectMockQueueWorker('redis');
 
@@ -54,11 +49,6 @@ final class QueueRedisTest extends TestCase
         $result = $job->enqueue('default');
 
         $this->assertIsInt($result);
-    }
-
-    public function testWorkerClasses()
-    {
-        $this->injectMockQueueWorker('redis');
 
         command('queues:worker default --oneTime');
 
@@ -66,7 +56,7 @@ final class QueueRedisTest extends TestCase
         $this->assertEquals('Hi Contructor method executed with this params:{"param1":1,"param2":2}', Services::response()->getBody()->json->data);
     }
 
-    public function testShell()
+    public function testWorkerShell()
     {
         $this->injectMockQueueWorker('redis');
 
@@ -77,18 +67,13 @@ final class QueueRedisTest extends TestCase
         $result = $job->enqueue('default');
 
         $this->assertIsInt($result);
-    }
-
-    public function testWorkerShell()
-    {
-        $this->injectMockQueueWorker('redis');
 
         command('queues:worker default --oneTime');
 
         $this->assertContains('src', Services::response()->getBody());
     }
 
-    public function testEvent()
+    public function testWorkerEvent()
     {
         $this->injectMockQueueWorker('redis');
 
@@ -99,18 +84,13 @@ final class QueueRedisTest extends TestCase
         $result = $job->enqueue('default');
 
         $this->assertIsInt($result);
-    }
-
-    public function testWorkerEvent()
-    {
-        $this->injectMockQueueWorker('redis');
 
         command('queues:worker default --oneTime');
 
         $this->assertTrue(Services::response()->getBody());
     }
 
-    public function testUrl()
+    public function testWorkerUrl()
     {
         $this->injectMockQueueWorker('redis');
 
@@ -131,11 +111,6 @@ final class QueueRedisTest extends TestCase
         $result = $job->enqueue('default');
 
         $this->assertIsInt($result);
-    }
-
-    public function testWorkerUrl()
-    {
-        $this->injectMockQueueWorker('redis');
 
         command('queues:worker default --oneTime');
 

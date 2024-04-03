@@ -24,7 +24,7 @@ final class QueueBeanstalkTest extends TestCase
         parent::tearDown();
     }
 
-    public function testClasses()
+    public function testWorkerClasses()
     {
         $this->injectMockQueueWorker('beanstalk');
 
@@ -34,21 +34,17 @@ final class QueueBeanstalkTest extends TestCase
         $result = $job->enqueue('default');
 
         $this->assertEquals('string', gettype($result));
-    }
-
-    public function testWorkerClasses()
-    {
-        $this->injectMockQueueWorker('beanstalk');
 
         command('queues:worker default --oneTime');
 
         /** @var object $body */
         $body = Services::response()->getBody();
+
         $this->assertSame('https://httpbin.org/post', $body->url);
         $this->assertEquals('Hi Contructor method executed with this params:{"param1":1,"param2":2}', $body->json->data);
     }
 
-    public function testCommand()
+    public function testWorkerCommand()
     {
         $this->injectMockQueueWorker('beanstalk');
 
@@ -60,18 +56,12 @@ final class QueueBeanstalkTest extends TestCase
         $result = $job->enqueue('default');
 
         $this->assertEquals('string', gettype($result));
-    }
-
-    public function testWorkerCommand()
-    {
-        $this->injectMockQueueWorker('beanstalk');
 
         command('queues:worker default --oneTime');
 
         $this->assertEquals('Commands can output text. []', Services::response()->getBody());
     }
-
-    public function testShell()
+    public function testWorkerShell()
     {
         $this->injectMockQueueWorker('beanstalk');
 
@@ -82,11 +72,6 @@ final class QueueBeanstalkTest extends TestCase
         $result = $job->enqueue('default');
 
         $this->assertEquals('string', gettype($result));
-    }
-
-    public function testWorkerShell()
-    {
-        $this->injectMockQueueWorker('beanstalk');
 
         command('queues:worker default --oneTime');
 
@@ -95,7 +80,7 @@ final class QueueBeanstalkTest extends TestCase
         $this->assertContains('src', $body);
     }
 
-    public function testEvent()
+    public function testWorkerEvent()
     {
         $this->injectMockQueueWorker('beanstalk');
 
@@ -106,18 +91,13 @@ final class QueueBeanstalkTest extends TestCase
         $result = $job->enqueue('default');
 
         $this->assertEquals('string', gettype($result));
-    }
-
-    public function testWorkerEvent()
-    {
-        $this->injectMockQueueWorker('beanstalk');
 
         command('queues:worker default --oneTime');
 
         $this->assertTrue(Services::response()->getBody());
     }
 
-    public function testUrl()
+    public function testWorkerUrl()
     {
         $this->injectMockQueueWorker('beanstalk');
 
@@ -138,11 +118,7 @@ final class QueueBeanstalkTest extends TestCase
         $result = $job->enqueue('default');
 
         $this->assertEquals('string', gettype($result));
-    }
 
-    public function testWorkerUrl()
-    {
-        $this->injectMockQueueWorker('beanstalk');
         command('queues:worker default --oneTime');
 
         $this->assertIsObject(Services::response()->getBody());
