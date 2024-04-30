@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Daycry\Queues\Exceptions;
 
-use RuntimeException;
+use Daycry\Exceptions\Exceptions\RuntimeException;
 
 class QueueException extends RuntimeException
 {

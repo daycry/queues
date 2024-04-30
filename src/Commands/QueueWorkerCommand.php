@@ -7,9 +7,10 @@ use CodeIgniter\CLI\CLI;
 use CodeIgniter\HTTP\Response;
 use Config\Services;
 use Daycry\Queues\Exceptions\QueueException;
-use Daycry\Queues\Interfaces\BaseExceptionInterface;
+use Daycry\Exceptions\Interfaces\BaseExceptionInterface;
 use Daycry\Queues\Job;
 use Daycry\Queues\Libraries\Utils;
+use Exception;
 
 class QueueWorkerCommand extends BaseCommand
 {
@@ -80,7 +81,7 @@ class QueueWorkerCommand extends BaseCommand
 
                 $job = $worker->watch($queue);
 
-                if($job) {
+                if(isset($job)) {
                     $this->locked = true;
 
                     $dataJob = $worker->getDataJob();
@@ -109,11 +110,15 @@ class QueueWorkerCommand extends BaseCommand
                 $response['status'] = false;
                 $worker->removeJob($j, true);
                 $this->showError($e);
+            } catch(Exception $e) {
+                $response['statusCode'] = $e->getCode();
+                $response['error'] = $e->getMessage();
+                $response['status'] = false;
             }
 
-            if($response) {
+            if($response && isset($job)) {
                 try {
-                    if($response['status'] === true || $job->getAttempt() >= service('settings')->get('Queue.maxAttempts')) {
+                    if($response['status'] === true || $j->getAttempt() >= service('settings')->get('Queue.maxAttempts')) {
                         $worker->removeJob($j, false);
                     }
 
@@ -135,13 +140,13 @@ class QueueWorkerCommand extends BaseCommand
 
             $this->locked = false;
             $response = [];
+            unset($j, $job);
 
             sleep(service('settings')->get('Queue.waitingTimeBetweenJobs'));
 
             if ($oneTime) {
                 return;
             }
-
         }
     }
 }

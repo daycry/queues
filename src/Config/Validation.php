@@ -32,8 +32,8 @@ class Validation extends ConfigValidation
         'class' => 'required|string',
         'method' => 'required|string',
         'options' => 'if_exist|permit_empty',
-        'options.contructor' => 'if_exist|required_with[params]|required',
-        'options.method' => 'if_exist|required_with[params]|required',
+        'options.contructor' => 'if_exist|required_with[options]|required',
+        'options.method' => 'if_exist|required_with[options]|required',
     ];
 
     public array $command = [
