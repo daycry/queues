@@ -1,7 +1,7 @@
 {
     "name": "daycry/queues",
     "description": "Queues for Codeigniter 4",
-    "keywords": ["beanstalk", "redis", "service bus (azure)"],
+    "keywords": ["beanstalk", "redis", "service bus"],
     "homepage": "https://github.com/daycry/queues",
     "authors":
     [
@@ -34,8 +34,7 @@
         "php-vcr/phpunit-testlistener-vcr": "dev-php8",
         "phpstan/phpstan": "^1.7.1",
         "phpunit/phpunit": "^9.1",
-        "phpunit/phpcov": "^8",
-        "rector/rector": "0.14.0"
+        "phpunit/phpcov": "^8"
     },
     "autoload":
     {
