@@ -56,8 +56,8 @@ final class JobTest extends TestCase
         $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' => ['X-API-KEY' => '1234']]);
 
         $this->assertSame('command', $job->getType());
-        $this->assertSame($command, $job->getAction());
-        $this->assertSame($objectExpected, $job->toObject());
+        $this->assertEquals($command, $job->getAction());
+        $this->assertEquals($objectExpected, $job->toObject());
     }
 
     public function testInvalidMethod(): void
@@ -109,8 +109,8 @@ final class JobTest extends TestCase
         $job->shell($name);
 
         $this->assertSame('shell', $job->getType());
-        $this->assertSame($command, $job->getAction());
-        $this->assertSame($objectExpected, $job->toObject());
+        $this->assertEquals($command, $job->getAction());
+        $this->assertEquals($objectExpected, $job->toObject());
     }
 
     public function testClasses(): void
@@ -129,8 +129,8 @@ final class JobTest extends TestCase
         $job->classes(\Tests\Support\Classes::class, 'run', ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]);
 
         $this->assertSame('classes', $job->getType());
-        $this->assertSame($command, $job->getAction());
-        $this->assertSame($objectExpected, $job->toObject());
+        $this->assertEquals($command, $job->getAction());
+        $this->assertEquals($objectExpected, $job->toObject());
     }
 
     public function testEvent(): void
@@ -150,8 +150,8 @@ final class JobTest extends TestCase
         $job->event($name);
 
         $this->assertSame('event', $job->getType());
-        $this->assertSame($command, $job->getAction());
-        $this->assertSame($objectExpected, $job->toObject());
+        $this->assertEquals($command, $job->getAction());
+        $this->assertEquals($objectExpected, $job->toObject());
     }
 
     public function testUrl(): void
@@ -180,8 +180,8 @@ final class JobTest extends TestCase
         $job->url($url, $options);
 
         $this->assertSame('url', $job->getType());
-        $this->assertSame(json_decode(json_encode(array_merge(['url' => $url], $options))), $job->getAction());
-        $this->assertSame($objectExpected, $job->toObject());
+        $this->assertEquals(json_decode(json_encode(array_merge(['url' => $url], $options))), $job->getAction());
+        $this->assertEquals($objectExpected, $job->toObject());
     }
 
     public function testCommandScheduled(): void
@@ -203,7 +203,7 @@ final class JobTest extends TestCase
         $job->scheduled($scheduled);
 
         $this->assertSame('command', $job->getType());
-        $this->assertSame($command, $job->getAction());
-        $this->assertSame(json_decode(json_encode($objectExpected)), $job->toObject());
+        $this->assertEquals($command, $job->getAction());
+        $this->assertEquals(json_decode(json_encode($objectExpected)), $job->toObject());
     }
 }
