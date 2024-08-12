@@ -2,14 +2,28 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of Daycry Queues.
+ *
+ * (c) Daycry <daycry9@proton.me>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Tests\Queue;
 
+use Angelov\PHPUnitPHPVcr\UseCassette;
 use Config\Services;
 use DateInterval;
 use DateTime;
 use Daycry\Queues\Job;
+use PHPUnit\Framework\Attributes\Group;
 use Tests\Support\TestCase;
 
+/**
+ * @internal
+ */
 final class QueueServiceBusTest extends TestCase
 {
     protected function setUp(): void
@@ -22,11 +36,9 @@ final class QueueServiceBusTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @vcr testCommandServiceBus.json
-     * @group fixtures
-     */
-    public function testCommand()
+    #[Group('fixtures')]
+    #[UseCassette('testCommandServiceBus.json')]
+    public function testCommand(): void
     {
         $this->injectMockQueueWorker('serviceBus');
 
@@ -39,24 +51,20 @@ final class QueueServiceBusTest extends TestCase
         $this->assertIsString($result);
     }
 
-    /**
-     * @vcr testWorkerCommandServiceBus.json
-     * @group fixtures
-     */
-    public function testWorkerCommand()
+    #[Group('fixtures')]
+    #[UseCassette('testWorkerCommandServiceBus.json')]
+    public function testWorkerCommand(): void
     {
         $this->injectMockQueueWorker('serviceBus');
 
         command('queues:worker dummy --oneTime');
 
-        $this->assertEquals('Commands can output text. []', Services::response()->getBody());
+        $this->assertSame('Commands can output text. []', Services::response()->getBody());
     }
 
-    /**
-     * @vcr testClassesServiceBus.json
-     * @group fixtures
-     */
-    public function testClasses()
+    #[Group('fixtures')]
+    #[UseCassette('testClassesServiceBus.json')]
+    public function testClasses(): void
     {
         $this->injectMockQueueWorker('serviceBus');
 
@@ -68,25 +76,21 @@ final class QueueServiceBusTest extends TestCase
         $this->assertIsString($result);
     }
 
-    /**
-     * @vcr testWorkerClassesServiceBus.json
-     * @group fixtures
-     */
-    public function testWorkerClasses()
+    #[Group('fixtures')]
+    #[UseCassette('testWorkerClassesServiceBus.json')]
+    public function testWorkerClasses(): void
     {
         $this->injectMockQueueWorker('serviceBus');
 
         command('queues:worker dummy --oneTime');
 
         $this->assertSame('https://httpbin.org/post', Services::response()->getBody()->url);
-        $this->assertEquals('Hi Contructor method executed with this params:{"param1":1,"param2":2}', Services::response()->getBody()->json->data);
+        $this->assertSame('Hi Contructor method executed with this params:{"param1":1,"param2":2}', Services::response()->getBody()->json->data);
     }
 
-    /**
-     * @vcr testShellServiceBus.json
-     * @group fixtures
-     */
-    public function testShell()
+    #[Group('fixtures')]
+    #[UseCassette('testShellServiceBus.json')]
+    public function testShell(): void
     {
         $this->injectMockQueueWorker('serviceBus');
 
@@ -100,11 +104,9 @@ final class QueueServiceBusTest extends TestCase
         $this->assertIsString($result);
     }
 
-    /**
-     * @vcr testWorkerShellServiceBus.json
-     * @group fixtures
-     */
-    public function testWorkerShell()
+    #[Group('fixtures')]
+    #[UseCassette('testWorkerShellServiceBus.json')]
+    public function testWorkerShell(): void
     {
         $this->injectMockQueueWorker('serviceBus');
 
@@ -113,11 +115,9 @@ final class QueueServiceBusTest extends TestCase
         $this->assertContains('src', Services::response()->getBody());
     }
 
-    /**
-     * @vcr testEventServiceBus.json
-     * @group fixtures
-     */
-    public function testEvent()
+    #[Group('fixtures')]
+    #[UseCassette('testEventServiceBus.json')]
+    public function testEvent(): void
     {
         $this->injectMockQueueWorker('serviceBus');
 
@@ -130,11 +130,9 @@ final class QueueServiceBusTest extends TestCase
         $this->assertIsString($result);
     }
 
-    /**
-     * @vcr testWorkerEventServiceBus.json
-     * @group fixtures
-     */
-    public function testWorkerEvent()
+    #[Group('fixtures')]
+    #[UseCassette('testWorkerEventServiceBus.json')]
+    public function testWorkerEvent(): void
     {
         $this->injectMockQueueWorker('serviceBus');
 
@@ -143,24 +141,22 @@ final class QueueServiceBusTest extends TestCase
         $this->assertTrue(Services::response()->getBody());
     }
 
-    /**
-     * @vcr testUrlServiceBus.json
-     * @group fixtures
-     */
-    public function testUrl()
+    #[Group('fixtures')]
+    #[UseCassette('testUrlServiceBus.json')]
+    public function testUrl(): void
     {
         $this->injectMockQueueWorker('serviceBus');
 
         $url = 'https://httpbin.org/post';
 
         $options = [
-            'verify' => false,
-            'method' => 'post',
-            'body' => ['param1' => 'p1'],
+            'verify'   => false,
+            'method'   => 'post',
+            'body'     => ['param1' => 'p1'],
             'dataType' => 'json',
-            'headers' => [
-                'X-API-KEY' => '1234'
-            ]
+            'headers'  => [
+                'X-API-KEY' => '1234',
+            ],
         ];
 
         $job = new Job();
@@ -170,25 +166,22 @@ final class QueueServiceBusTest extends TestCase
         $this->assertIsString($result);
     }
 
-    /**
-     * @vcr testWorkerUrlServiceBus.json
-     * @group fixtures
-     */
-    public function testWorkerUrl()
+    #[Group('fixtures')]
+    #[UseCassette('testWorkerUrlServiceBus.json')]
+    public function testWorkerUrl(): void
     {
         $this->injectMockQueueWorker('serviceBus');
 
         command('queues:worker dummy --oneTime');
 
         $this->assertSame('https://httpbin.org/post', Services::response()->getBody()->url);
-        $this->assertEquals('p1', Services::response()->getBody()->json->param1);
+        $this->assertSame('p1', Services::response()->getBody()->json->param1);
     }
 
-    /**
-     * @vcr testScheduledShellServiceBus.json
-     * @group fixtures
-     */
-    /*public function testScheduledShell()
+    /*
+    #[UseCassette('testScheduledShellServiceBus.json')]
+    #[Group('fixtures')]
+    public function testScheduledShell()
     {
         $this->injectMockQueueWorker('serviceBus');
 

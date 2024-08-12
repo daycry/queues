@@ -22,19 +22,17 @@
     },
     "require-dev":
     {
-        "codeigniter/coding-standard": "^1.1",
-        "codeigniter4/devkit": "^1.1",
+        "codeigniter4/devkit": "*",
         "codeigniter4/framework": "^4",
-        "fakerphp/faker": "^1.9",
-        "friendsofphp/php-cs-fixer": "^3.6",
-        "mikey179/vfsstream": "^1.6",
-        "nexusphp/cs-config": "^3.3",
-        "nexusphp/tachycardia": "^1.0",
-        "php-vcr/php-vcr": "^1",
-        "php-vcr/phpunit-testlistener-vcr": "dev-php8",
-        "phpstan/phpstan": "^1.7.1",
-        "phpunit/phpunit": "^9.1",
-        "phpunit/phpcov": "^8"
+        "codeigniter/phpstan-codeigniter": "^1.3",
+        "mikey179/vfsstream": "^1.6.7",
+        "mockery/mockery": "^1.0",
+        "phpstan/extension-installer": "^1.3",
+        "phpstan/phpstan-strict-rules": "^1.5",
+        "phpunit/phpcov": "^9.0.2",
+        "rector/rector": "1.2.1",
+        "angelov/phpunit-php-vcr": "^1.1",
+        "php-vcr/php-vcr": "^1.7"
     },
     "autoload":
     {
@@ -53,25 +51,12 @@
             "Tests\\Support\\": "tests/_support"
         }
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/abraham/phpunit-testlistener-vcr"
-        }
-    ],
     "scripts": {
-        "cs-fixer": [ 
-            "php-cs-fixer fix --ansi --verbose src",
-            "php-cs-fixer fix --ansi --verbose tests"
-        ],
-        "cs": [
-            "vendor/bin/php-cs-fixer fix --verbose --ansi --dry-run --using-cache=no --diff src",
-            "vendor/bin/php-cs-fixer fix --verbose --ansi --dry-run --using-cache=no --diff tests"
-        ],
+        "cs": "php-cs-fixer fix --ansi --verbose --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix --ansi --verbose --diff",
         "test": [
             "Composer\\Config::disableProcessTimeout",
             "vendor/bin/phpunit --exclude-group fixtures --coverage-php build/coverage/no-fixtures.cov",
-            "vendor/bin/phpunit --group fixtures --coverage-php build/coverage/fixtures.cov",
             "vendor/bin/phpcov merge --clover build/logs/clover.xml build/coverage --html build/logs/html",
             "@cs"
         ],

@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of Daycry Queues.
+ *
+ * (c) Daycry <daycry9@proton.me>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Daycry\Queues\Config;
 
 use CodeIgniter\Config\BaseConfig;
@@ -17,32 +26,25 @@ class Queue extends BaseConfig
         'shell',
         'event',
         'url',
-        'classes'
+        'classes',
     ];
-
-    public string|array $queues = 'default,dummy';
-
-    public string $worker = 'sync';
-
-    public int $maxAttempts = 5;
-
+    public array|string $queues        = 'default,dummy';
+    public string $worker              = 'sync';
+    public int $maxAttempts            = 5;
     public int $waitingTimeBetweenJobs = 2;
-
-    public array $workers = [
-        'sync' => SyncQueue::class,
-        'beanstalk' => BeanstalkQueue::class,
-        'redis' => RedisQueue::class,
-        'serviceBus' => ServiceBusQueue::class
+    public array $workers              = [
+        'sync'       => SyncQueue::class,
+        'beanstalk'  => BeanstalkQueue::class,
+        'redis'      => RedisQueue::class,
+        'serviceBus' => ServiceBusQueue::class,
     ];
-
     public array $beanstalk = [
         'host' => '127.0.0.1',
-        'port' => 11300
+        'port' => 11300,
     ];
-
     public array $serviceBus = [
-        'url' => '',
+        'url'    => '',
         'issuer' => '',
-        'secret' => ''
+        'secret' => '',
     ];
 }

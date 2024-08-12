@@ -2,16 +2,28 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of Daycry Queues.
+ *
+ * (c) Daycry <daycry9@proton.me>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Tests\Queue;
 
 use CodeIgniter\Events\Events;
 use CodeIgniter\HTTP\Response;
+use DateTime;
 use Daycry\Queues\Exceptions\QueueException;
 use Daycry\Queues\Job;
-use Tests\Support\TestCase;
 use stdClass;
-use DateTime;
+use Tests\Support\TestCase;
 
+/**
+ * @internal
+ */
 final class QueueSyncTest extends TestCase
 {
     protected function setUp(): void
@@ -24,7 +36,7 @@ final class QueueSyncTest extends TestCase
         parent::tearDown();
     }
 
-    public function testCommand()
+    public function testCommand(): void
     {
         $command = 'job:test';
 
@@ -33,49 +45,49 @@ final class QueueSyncTest extends TestCase
         $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' => ['X-API-KEY' => '1234']]);
         $result = $job->enqueue('default');
 
-        $this->assertEquals($result, 'Commands can output text. {"param":"1"}');
+        $this->assertSame($result, 'Commands can output text. {"param":"1"}');
     }
 
-    public function testClasses()
+    public function testClasses(): void
     {
         $job = new Job();
         $job->classes(\Tests\Support\Classes\Example::class, 'run', ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]);
         $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' => ['X-API-KEY' => '1234']]);
         $result = $job->enqueue('default');
 
-        $this->assertEquals($result, 'Hi Contructor method executed with this params:{"param1":1,"param2":2}');
+        $this->assertSame($result, 'Hi Contructor method executed with this params:{"param1":1,"param2":2}');
     }
 
-    public function testWorkerException()
+    public function testWorkerException(): void
     {
         $this->injectMockQueueWorker('foo');
         $this->expectException(QueueException::class);
         $command = 'job:test';
 
-        $objectExpected = new stdClass();
-        $objectExpected->type = 'command';
-        $objectExpected->action = $command;
+        $objectExpected           = new stdClass();
+        $objectExpected->type     = 'command';
+        $objectExpected->action   = $command;
         $objectExpected->schedule = null;
 
-        $job = new Job($objectExpected);
+        $job    = new Job($objectExpected);
         $result = $job->enqueue('default');
     }
 
-    public function testQueueException()
+    public function testQueueException(): void
     {
         $this->expectException(QueueException::class);
         $command = 'job:test';
 
-        $objectExpected = new stdClass();
-        $objectExpected->type = 'command';
-        $objectExpected->action = $command;
+        $objectExpected           = new stdClass();
+        $objectExpected->type     = 'command';
+        $objectExpected->action   = $command;
         $objectExpected->schedule = null;
 
-        $job = new Job($objectExpected);
+        $job    = new Job($objectExpected);
         $result = $job->enqueue('foo');
     }
 
-    public function testShell()
+    public function testShell(): void
     {
         $command = 'ls';
 
@@ -83,10 +95,10 @@ final class QueueSyncTest extends TestCase
         $job->shell($command);
         $result = $job->enqueue('default');
 
-        $this->assertTrue(in_array('src', $result));
+        $this->assertTrue(in_array('src', $result, true));
     }
 
-    public function testShellScheduled()
+    public function testShellScheduled(): void
     {
         $command = 'ls';
 
@@ -95,14 +107,12 @@ final class QueueSyncTest extends TestCase
         $job->shell($command);
         $result = $job->enqueue('default');
 
-        $this->assertTrue(in_array('src', $result));
+        $this->assertTrue(in_array('src', $result, true));
     }
 
-    public function testEvent()
+    public function testEvent(): void
     {
-        Events::on('custom', static function () {
-            return "Hello event";
-        });
+        Events::on('custom', static fn () => 'Hello event');
 
         $command = 'custom';
 
@@ -110,21 +120,21 @@ final class QueueSyncTest extends TestCase
         $job->event($command);
         $result = $job->enqueue('default');
 
-        $this->assertEquals('Hello event', $result);
+        $this->assertTrue($result);
     }
 
-    public function testUrl()
+    public function testUrl(): void
     {
         $url = 'https://httpbin.org/post';
 
         $options = [
-            'verify' => false,
-            'method' => 'post',
-            'body' => ['param1' => 'p1'],
+            'verify'   => false,
+            'method'   => 'post',
+            'body'     => ['param1' => 'p1'],
             'dataType' => 'json',
-            'headers' => [
-                'X-API-KEY' => '1234'
-            ]
+            'headers'  => [
+                'X-API-KEY' => '1234',
+            ],
         ];
 
         $job = new Job();

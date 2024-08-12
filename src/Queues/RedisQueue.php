@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of Daycry Queues.
+ *
+ * (c) Daycry <daycry9@proton.me>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Daycry\Queues\Queues;
 
 use CodeIgniter\Config\Services;
@@ -9,8 +18,8 @@ use Config\Cache;
 use Daycry\Queues\Exceptions\QueueException;
 use Daycry\Queues\Interfaces\QueueInterface;
 use Daycry\Queues\Interfaces\WorkerInterface;
-use Daycry\Queues\Libraries\RedisHandler;
 use Daycry\Queues\Job as QueuesJob;
+use Daycry\Queues\Libraries\RedisHandler;
 use Redis;
 
 class RedisQueue extends BaseQueue implements QueueInterface, WorkerInterface
@@ -31,9 +40,7 @@ class RedisQueue extends BaseQueue implements QueueInterface, WorkerInterface
     public const QUEUE_FAILED = '{redis-queue}-failed';
 
     protected Redis $connection;
-
     protected Redis $queue;
-
     private mixed $job = null;
 
     /**
@@ -43,19 +50,19 @@ class RedisQueue extends BaseQueue implements QueueInterface, WorkerInterface
         'retry_seconds' => 5,
         'max_attempts'  => 5,
         'auth'          => '',
-        'db'            => 0
+        'db'            => 0,
     ];
 
     public function __construct()
     {
-        $cacheConfig = config(Cache::class);
+        $cacheConfig          = config(Cache::class);
         $cacheConfig->handler = 'redis';
 
         $cache = new RedisHandler($cacheConfig);
         $cache->initialize();
         $this->connection = $cache->getRedis();
-        //$this->queue = $cache->getRedis();
-        //$this->queue->brPoping = 0;
+        // $this->queue = $cache->getRedis();
+        // $this->queue->brPoping = 0;
     }
 
     public function enqueue(object $data, string $queue = 'default')
@@ -69,13 +76,13 @@ class RedisQueue extends BaseQueue implements QueueInterface, WorkerInterface
         $now = $id = time();
 
         $content = \json_encode([
-            'id'       => $id,
-            'time'     => $now,
-            'delay'    => $this->getDelay(),
-            'data'     => $data
+            'id'    => $id,
+            'time'  => $now,
+            'delay' => $this->getDelay(),
+            'data'  => $data,
         ]);
 
-        if ($this->getDelay() == 0) {
+        if ($this->getDelay() === 0) {
             $this->connection->lPush(service('settings')->get('Cache.prefix') . $parser->setData(['redis-queue' => $queue])->renderString(static::QUEUE_WAITING), $content);
         } else {
             $this->connection->zAdd(service('settings')->get('Cache.prefix') . $parser->setData(['redis-queue' => $queue])->renderString(static::QUEUE_DELAYED), $now + $this->getDelay(), $content);
@@ -99,7 +106,7 @@ class RedisQueue extends BaseQueue implements QueueInterface, WorkerInterface
     {
         $job = $this->connection->rpop($queue);
 
-        if($job) {
+        if ($job) {
             return $this->job = \json_decode($job);
         }
 
@@ -113,8 +120,8 @@ class RedisQueue extends BaseQueue implements QueueInterface, WorkerInterface
 
     public function removeJob(QueuesJob $job, bool $recreate = false): bool
     {
-        if($recreate === true) {
-            //$this->connection->release($this->job);
+        if ($recreate === true) {
+            // $this->connection->release($this->job);
             $job->addAttempt();
             $job->enqueue($job->getQueue());
         }
@@ -123,26 +130,26 @@ class RedisQueue extends BaseQueue implements QueueInterface, WorkerInterface
         return true;
     }
 
-    protected function tryToPullDelayQueue(string $queue)
+    protected function tryToPullDelayQueue(string $queue): void
     {
         $parser = Services::parser();
 
-        $now = time();
+        $now     = time();
         $options = ['LIMIT' => [0, 128]];
 
-        $items = $this->connection->zrangebyscore(service('settings')->get('Cache.prefix') . $parser->setData(['redis-queue' => $queue])->renderString(static::QUEUE_DELAYED), '-inf', strval($now), $options);
+        $items = $this->connection->zrangebyscore(service('settings')->get('Cache.prefix') . $parser->setData(['redis-queue' => $queue])->renderString(static::QUEUE_DELAYED), '-inf', (string) $now, $options);
 
         if ($items === false) {
             throw QueueException::forInvalidConnection($this->connection->error());
         }
 
         foreach ($items as $packageStr) {
-            $this->connection->zRem(service('settings')->get('Cache.prefix') . $parser->setData(['redis-queue' => $queue])->renderString(static::QUEUE_DELAYED), $packageStr, function ($result) use ($packageStr, $queue, $parser) {
+            $this->connection->zRem(service('settings')->get('Cache.prefix') . $parser->setData(['redis-queue' => $queue])->renderString(static::QUEUE_DELAYED), $packageStr, function ($result) use ($packageStr, $queue, $parser): void {
                 if ($result !== 1) {
                     return;
                 }
                 $package = json_decode($packageStr);
-                if (!$package) {
+                if (! $package) {
                     $this->connection->lPush(service('settings')->get('Cache.prefix') . $parser->setData(['redis-queue' => $queue])->renderString(static::QUEUE_FAILED), $packageStr);
                 }
                 $this->connection->lPush(service('settings')->get('Cache.prefix') . $parser->setData(['redis-queue' => $queue])->renderString(static::QUEUE_WAITING), $packageStr);

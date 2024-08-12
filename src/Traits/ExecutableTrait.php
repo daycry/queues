@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of Daycry Queues.
+ *
+ * (c) Daycry <daycry9@proton.me>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Daycry\Queues\Traits;
 
 use CodeIgniter\Config\Services;
@@ -10,6 +19,7 @@ use Daycry\Queues\Exceptions\JobException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
+use InvalidArgumentException;
 
 trait ExecutableTrait
 {
@@ -22,28 +32,31 @@ trait ExecutableTrait
     {
         $method = 'run' . ucfirst($this->type);
         // @codeCoverageIgnoreStart
-        if (!method_exists($this, $method)) {
+        if (! method_exists($this, $method)) {
             throw JobException::forInvalidTaskType($this->type);
         }
+
         // @codeCoverageIgnoreEnd
-        return $this->$method();
+        return $this->{$method}();
     }
 
     /**
      * Runs a framework Command.
      *
      * @return string Buffered output from the Command
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     protected function runCommand(): mixed
     {
         $params = '';
-        if($this->getAction()->options) {
-            foreach($this->getAction()->options as $option => $value) {
+        if ($this->getAction()->options) {
+            foreach ($this->getAction()->options as $option => $value) {
                 $params = $params . ' -' . $option . ' ' . $value;
             }
         }
-        return command($this->getAction()->command. $params);
+
+        return command($this->getAction()->command . $params);
     }
 
     /**
@@ -61,7 +74,7 @@ trait ExecutableTrait
     /**
      * Triggers an Event.
      *
-     * @return boolean Result of the trigger
+     * @return bool Result of the trigger
      */
     protected function runEvent(): mixed
     {
@@ -71,19 +84,17 @@ trait ExecutableTrait
     /**
      * Run a class.
      *
-     * @return boolean Result of the trigger
+     * @return bool Result of the trigger
      */
     protected function runClasses(): mixed
     {
         $inConstructor = (isset($this->getAction()->options->constructor)) ? true : false;
-        $inMethod = (isset($this->getAction()->options->method)) ? true : false;
-        $class = $this->getAction()->class;
+        $inMethod      = (isset($this->getAction()->options->method)) ? true : false;
+        $class         = $this->getAction()->class;
 
         $class = ($inConstructor) ? new $class($this->getAction()->options->constructor) : new $class();
 
-        $return = ($inMethod) ? $class->{$this->getAction()->method}($this->getAction()->options->method) : $class->{$this->getAction()->method}();
-
-        return $return;
+        return ($inMethod) ? $class->{$this->getAction()->method}($this->getAction()->options->method) : $class->{$this->getAction()->method}();
     }
 
     /**
@@ -95,32 +106,31 @@ trait ExecutableTrait
     {
         $data = $this->getAction();
 
-        $verify = (isset($data->verify)) ? $data->verify : true;
-        $headers = (isset($data->headers)) ? (array)$data->headers : [];
-        $body = (isset($data->body)) ? \json_decode(\json_encode($data->body), true) : [];
+        $verify   = (isset($data->verify)) ? $data->verify : true;
+        $headers  = (isset($data->headers)) ? (array) $data->headers : [];
+        $body     = (isset($data->body)) ? \json_decode(\json_encode($data->body), true) : [];
         $dataType = (isset($data->dataType)) ? $data->dataType : 'json';
 
         $headers['Host'] = $this->_getHost($data->url);
 
         $options = [
-            'verify'        => $verify,
+            'verify'          => $verify,
             'allow_redirects' => true,
-            'http_errors'   => true,
-            'timeout'       => 3600,
-            'headers'       => $headers,
-            $dataType       => $body,
+            'http_errors'     => true,
+            'timeout'         => 3600,
+            'headers'         => $headers,
+            $dataType         => $body,
         ];
 
         $r = Services::response(null, true);
 
         try {
-            $client = new Client();
+            $client   = new Client();
             $response = $client->request(\strtoupper($data->method), $data->url, $options);
             // @codeCoverageIgnoreStart
-        } catch(RequestException $ex) {
+        } catch (RequestException $ex) {
             $response = $ex->getResponse();
-
-        } catch(ClientException $ex) {
+        } catch (ClientException $ex) {
             $response = $ex->getResponse();
         }
         // @codeCoverageIgnoreEnd
@@ -133,6 +143,7 @@ trait ExecutableTrait
     private function _getHost($Address)
     {
         $parseUrl = parse_url(trim($Address));
-        return trim(isset($parseUrl['host']) ? $parseUrl['host'] : array_shift(explode('/', $parseUrl['path'], 2)));
+
+        return trim($parseUrl['host'] ?? array_shift(explode('/', $parseUrl['path'], 2)));
     }
 }

@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of Daycry Queues.
+ *
+ * (c) Daycry <daycry9@proton.me>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Daycry\Queues;
 
 use CodeIgniter\I18n\Time;
@@ -18,12 +27,9 @@ class Job
     use ExecutableTrait;
     use CallableTrait;
 
-    private array $types = [];
-
-    protected ?string $type = null;
-
-    protected mixed $action = null;
-
+    private array $types          = [];
+    protected ?string $type       = null;
+    protected mixed $action       = null;
     protected ?DateTime $schedule = null;
 
     public function __construct(?object $data = null)
@@ -32,11 +38,11 @@ class Job
 
         $this->checkWorker();
 
-        if($data) {
-            foreach($data as $attribute => $value) {
-                if(property_exists($this, $attribute)) {
-                    if($attribute == 'schedule') {
-                        if($value && $value instanceof object) {
+        if ($data) {
+            foreach ($data as $attribute => $value) {
+                if (property_exists($this, $attribute)) {
+                    if ($attribute === 'schedule') {
+                        if ($value && $value instanceof object) {
                             $this->{$attribute} = new DateTime($value->date, new DateTimeZone($value->timezone));
                         }
                     } else {
@@ -45,7 +51,7 @@ class Job
                 }
             }
 
-            if ($this->type && !in_array($this->type, $this->types, true)) {
+            if ($this->type && ! in_array($this->type, $this->types, true)) {
                 throw JobException::forInvalidTaskType($this->type);
             }
         }
@@ -53,8 +59,6 @@ class Job
 
     /**
      * Returns the type.
-     *
-     * @return string
      */
     public function getType(): string
     {
@@ -71,26 +75,20 @@ class Job
         return $this->action;
     }
 
-    /**
-     * @param string $command
-     */
     public function command(string $command, array|object $options = []): Job
     {
         $this->type = 'command';
-        $options = $this->_prepareJobOptions($options);
+        $options    = $this->_prepareJobOptions($options);
 
         $this->action = json_decode(json_encode(['command' => $command, 'options' => $options]));
 
         return $this;
     }
 
-    /**
-     * @param string $command
-     */
     public function shell(string $command, array|object $options = []): Job
     {
         $this->type = 'shell';
-        $options = $this->_prepareJobOptions($options);
+        $options    = $this->_prepareJobOptions($options);
 
         $this->action = json_decode(json_encode(['command' => $command, 'options' => $options]));
 
@@ -98,12 +96,12 @@ class Job
     }
 
     /**
-     * @param string $name  Name of the event to trigger
+     * @param string $name Name of the event to trigger
      */
     public function event(string $name, array|object $options = []): Job
     {
         $this->type = 'event';
-        $options = $this->_prepareJobOptions($options);
+        $options    = $this->_prepareJobOptions($options);
 
         $this->action = json_decode(json_encode(['event' => $name, 'options' => $options]));
 
@@ -111,34 +109,31 @@ class Job
     }
 
     /**
-     * @param string $url
      * @param array $options
      */
     public function url(string $url, array|object $options = []): Job
     {
-        $data = [];
+        $data    = [];
         $options = $this->_prepareJobOptions($options);
 
-        $data = array_merge(['url' => $url], $options);
-        $this->type = 'url';
+        $data         = array_merge(['url' => $url], $options);
+        $this->type   = 'url';
         $this->action = json_decode(json_encode($data));
 
         return $this;
     }
 
     /**
-     * @param string $class
-     * @param string $method
      * @param array $options
      */
     public function classes(string $class, string $method, array|object $options = []): Job
     {
-        $data = [];
-        $data['class'] = $class;
-        $data['method'] = $method;
+        $data            = [];
+        $data['class']   = $class;
+        $data['method']  = $method;
         $data['options'] = $options;
 
-        $this->type = 'classes';
+        $this->type   = 'classes';
         $this->action = json_decode(json_encode($data));
 
         return $this;
@@ -146,7 +141,7 @@ class Job
 
     public function scheduled(DateTime|Time $schedule)
     {
-        if($schedule instanceof Time) {
+        if ($schedule instanceof Time) {
             $schedule = $schedule->toDateTime();
         }
 
@@ -159,15 +154,14 @@ class Job
     {
         $data = get_object_vars($this);
         unset($data['types'], $data['worker']);
-        $data = json_decode(json_encode($data));
 
-        return $data;
+        return json_decode(json_encode($data));
     }
 
     private function _prepareJobOptions(array|object $options = [])
     {
-        if($options) {
-            if(!is_array($options)) {
+        if ($options) {
+            if (! is_array($options)) {
                 $options = json_decode(json_encode($options), true);
             }
 

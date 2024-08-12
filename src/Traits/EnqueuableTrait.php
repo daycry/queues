@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of Daycry Queues.
+ *
+ * (c) Daycry <daycry9@proton.me>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Daycry\Queues\Traits;
 
 use DateInterval;
@@ -13,28 +22,26 @@ use Daycry\Queues\Libraries\Utils;
 
 trait EnqueuableTrait
 {
-    protected int $attempts = 0;
-
+    protected int $attempts  = 0;
     protected ?string $queue = null;
-
     private QueueInterface $worker;
 
     public function enqueue(?string $queue = null)
     {
         $queues = Utils::parseConfigFile(service('settings')->get('Queue.queues'));
 
-        $queue = $queue ?? $this->queue;
+        $queue ??= $this->queue;
 
-        if($queue === null) {
+        if ($queue === null) {
             $this->setToDefaultQueue();
             $queue = $this->queue;
         }
 
-        if(!in_array($queue, $queues)) {
+        if (! in_array($queue, $queues, true)) {
             throw QueueException::forInvalidQueue($queue);
         }
 
-        $object = $this->toObject();
+        $object        = $this->toObject();
         $object->queue = $queue;
 
         Utils::checkDataQueue($object, 'queueData');
@@ -46,8 +53,6 @@ trait EnqueuableTrait
 
     /**
      * Returns the attempts.
-     *
-     * @return int
      */
     public function getAttempt(): int
     {
@@ -61,9 +66,9 @@ trait EnqueuableTrait
      */
     public function addAttempt(): self
     {
-        $this->attempts = $this->attempts + 1;
+        $this->attempts++;
 
-        if($this->schedule != null) {
+        if ($this->schedule !== null) {
             $this->scheduled((new DateTime())->add(new DateInterval('PT1H')));
         }
 
@@ -72,8 +77,6 @@ trait EnqueuableTrait
 
     /**
      * Set queue.
-     *
-     * @return self
      */
     public function setQueue(string $queue): self
     {
@@ -84,8 +87,6 @@ trait EnqueuableTrait
 
     /**
      * Get queue.
-     *
-     * @return string
      */
     public function getQueue(): string
     {
@@ -104,7 +105,7 @@ trait EnqueuableTrait
     /**
      * Provide magic function-access to Workers to run jobs.
      *
-     * @param string[] $args
+     * @param list<string> $args
      *
      * @throws JobException
      */
@@ -112,17 +113,17 @@ trait EnqueuableTrait
     {
         if ($this->worker && method_exists($this->worker, $method)) {
             return $this->worker->{$method}(...$args);
-        } else {
-            throw JobException::forInvalidMethod($method);
         }
+
+        throw JobException::forInvalidMethod($method);
     }
 
-    protected function checkWorker()
+    protected function checkWorker(): void
     {
         $workers = service('settings')->get('Queue.workers');
-        $worker = service('settings')->get('Queue.worker');
+        $worker  = service('settings')->get('Queue.worker');
 
-        if(!array_key_exists($worker, $workers)) {
+        if (! array_key_exists($worker, $workers)) {
             throw QueueException::forInvalidWorker($worker);
         }
 

@@ -2,14 +2,26 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of Daycry Queues.
+ *
+ * (c) Daycry <daycry9@proton.me>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Tests\Queue;
 
+use Config\Services;
 use DateInterval;
 use DateTime;
-use Config\Services;
 use Daycry\Queues\Job;
 use Tests\Support\TestCase;
 
+/**
+ * @internal
+ */
 final class QueueRedisTest extends TestCase
 {
     protected function setUp(): void
@@ -22,7 +34,7 @@ final class QueueRedisTest extends TestCase
         parent::tearDown();
     }
 
-    public function testWorkerCommand()
+    public function testWorkerCommand(): void
     {
         $this->injectMockQueueWorker('redis');
 
@@ -36,10 +48,10 @@ final class QueueRedisTest extends TestCase
 
         command('queues:worker default --oneTime');
 
-        $this->assertEquals('Commands can output text. []', Services::response()->getBody());
+        $this->assertSame('Commands can output text. []', Services::response()->getBody());
     }
 
-    public function testWorkerClasses()
+    public function testWorkerClasses(): void
     {
         $this->injectMockQueueWorker('redis');
 
@@ -53,10 +65,10 @@ final class QueueRedisTest extends TestCase
         command('queues:worker default --oneTime');
 
         $this->assertSame('https://httpbin.org/post', Services::response()->getBody()->url);
-        $this->assertEquals('Hi Contructor method executed with this params:{"param1":1,"param2":2}', Services::response()->getBody()->json->data);
+        $this->assertSame('Hi Contructor method executed with this params:{"param1":1,"param2":2}', Services::response()->getBody()->json->data);
     }
 
-    public function testWorkerShell()
+    public function testWorkerShell(): void
     {
         $this->injectMockQueueWorker('redis');
 
@@ -73,7 +85,7 @@ final class QueueRedisTest extends TestCase
         $this->assertContains('src', Services::response()->getBody());
     }
 
-    public function testWorkerEvent()
+    public function testWorkerEvent(): void
     {
         $this->injectMockQueueWorker('redis');
 
@@ -90,20 +102,20 @@ final class QueueRedisTest extends TestCase
         $this->assertTrue(Services::response()->getBody());
     }
 
-    public function testWorkerUrl()
+    public function testWorkerUrl(): void
     {
         $this->injectMockQueueWorker('redis');
 
         $url = 'https://httpbin.org/post';
 
         $options = [
-            'verify' => false,
-            'method' => 'post',
-            'body' => ['param1' => 'p1'],
+            'verify'   => false,
+            'method'   => 'post',
+            'body'     => ['param1' => 'p1'],
             'dataType' => 'json',
-            'headers' => [
-                'X-API-KEY' => '1234'
-            ]
+            'headers'  => [
+                'X-API-KEY' => '1234',
+            ],
         ];
 
         $job = new Job();
@@ -115,17 +127,17 @@ final class QueueRedisTest extends TestCase
         command('queues:worker default --oneTime');
 
         $this->assertSame('https://httpbin.org/post', Services::response()->getBody()->url);
-        $this->assertEquals('p1', Services::response()->getBody()->json->param1);
+        $this->assertSame('p1', Services::response()->getBody()->json->param1);
     }
 
-    public function testScheduledShell()
+    public function testScheduledShell(): void
     {
         $this->injectMockQueueWorker('redis');
 
         $command = 'ls';
 
         $dateTimeObj = new DateTime('now');
-        $dateTimeObj->add(new DateInterval("PT1H"));
+        $dateTimeObj->add(new DateInterval('PT1H'));
 
         $job = new Job();
         $job->shell($command);

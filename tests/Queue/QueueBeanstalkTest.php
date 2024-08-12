@@ -2,16 +2,26 @@
 
 declare(strict_types=1);
 
+/**
+ * This file is part of Daycry Queues.
+ *
+ * (c) Daycry <daycry9@proton.me>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Tests\Queue;
 
-use CodeIgniter\HTTP\Response;
 use Config\Services;
 use DateInterval;
 use DateTime;
 use Daycry\Queues\Job;
-use Pheanstalk\Values\JobId;
 use Tests\Support\TestCase;
 
+/**
+ * @internal
+ */
 final class QueueBeanstalkTest extends TestCase
 {
     protected function setUp(): void
@@ -24,7 +34,7 @@ final class QueueBeanstalkTest extends TestCase
         parent::tearDown();
     }
 
-    public function testWorkerClasses()
+    public function testWorkerClasses(): void
     {
         $this->injectMockQueueWorker('beanstalk');
 
@@ -33,7 +43,7 @@ final class QueueBeanstalkTest extends TestCase
         $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' => ['X-API-KEY' => '1234']]);
         $result = $job->enqueue('default');
 
-        $this->assertEquals('string', gettype($result));
+        $this->assertSame('string', gettype($result));
 
         command('queues:worker default --oneTime');
 
@@ -41,10 +51,10 @@ final class QueueBeanstalkTest extends TestCase
         $body = Services::response()->getBody();
 
         $this->assertSame('https://httpbin.org/post', $body->url);
-        $this->assertEquals('Hi Contructor method executed with this params:{"param1":1,"param2":2}', $body->json->data);
+        $this->assertSame('Hi Contructor method executed with this params:{"param1":1,"param2":2}', $body->json->data);
     }
 
-    public function testWorkerCommand()
+    public function testWorkerCommand(): void
     {
         $this->injectMockQueueWorker('beanstalk');
 
@@ -55,13 +65,14 @@ final class QueueBeanstalkTest extends TestCase
         $job->setPriority(10)->setTtr(3600);
         $result = $job->enqueue('default');
 
-        $this->assertEquals('string', gettype($result));
+        $this->assertSame('string', gettype($result));
 
         command('queues:worker default --oneTime');
 
-        $this->assertEquals('Commands can output text. []', Services::response()->getBody());
+        $this->assertSame('Commands can output text. []', Services::response()->getBody());
     }
-    public function testWorkerShell()
+
+    public function testWorkerShell(): void
     {
         $this->injectMockQueueWorker('beanstalk');
 
@@ -71,7 +82,7 @@ final class QueueBeanstalkTest extends TestCase
         $job->shell($command);
         $result = $job->enqueue('default');
 
-        $this->assertEquals('string', gettype($result));
+        $this->assertSame('string', gettype($result));
 
         command('queues:worker default --oneTime');
 
@@ -80,7 +91,7 @@ final class QueueBeanstalkTest extends TestCase
         $this->assertContains('src', $body);
     }
 
-    public function testWorkerEvent()
+    public function testWorkerEvent(): void
     {
         $this->injectMockQueueWorker('beanstalk');
 
@@ -90,34 +101,34 @@ final class QueueBeanstalkTest extends TestCase
         $job->event($command);
         $result = $job->enqueue('default');
 
-        $this->assertEquals('string', gettype($result));
+        $this->assertSame('string', gettype($result));
 
         command('queues:worker default --oneTime');
 
         $this->assertTrue(Services::response()->getBody());
     }
 
-    public function testWorkerUrl()
+    public function testWorkerUrl(): void
     {
         $this->injectMockQueueWorker('beanstalk');
 
         $url = 'https://httpbin.org/post';
 
         $options = [
-            'verify' => false,
-            'method' => 'post',
-            'body' => ['param1' => 'p1'],
+            'verify'   => false,
+            'method'   => 'post',
+            'body'     => ['param1' => 'p1'],
             'dataType' => 'json',
-            'headers' => [
-                'X-API-KEY' => '1234'
-            ]
+            'headers'  => [
+                'X-API-KEY' => '1234',
+            ],
         ];
 
         $job = new Job();
         $job->url($url, $options);
         $result = $job->enqueue('default');
 
-        $this->assertEquals('string', gettype($result));
+        $this->assertSame('string', gettype($result));
 
         command('queues:worker default --oneTime');
 
@@ -126,17 +137,17 @@ final class QueueBeanstalkTest extends TestCase
         /** @var object $response */
         $response = Services::response()->getBody();
         $this->assertSame('https://httpbin.org/post', $response->url);
-        $this->assertEquals('p1', $response->json->param1);
+        $this->assertSame('p1', $response->json->param1);
     }
 
-    public function testScheduledShell()
+    public function testScheduledShell(): void
     {
         $this->injectMockQueueWorker('beanstalk');
 
         $command = 'pwd';
 
         $dateTimeObj = new DateTime('now');
-        $dateTimeObj->add(new DateInterval("PT2H"));
+        $dateTimeObj->add(new DateInterval('PT2H'));
 
         $job = new Job();
         $job->shell($command);
@@ -144,6 +155,6 @@ final class QueueBeanstalkTest extends TestCase
         $job->setToDefaultQueue();
         $result = $job->enqueue();
 
-        $this->assertEquals('string', gettype($result));
+        $this->assertSame('string', gettype($result));
     }
 }

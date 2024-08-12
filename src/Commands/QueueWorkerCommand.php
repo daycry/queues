@@ -1,31 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * This file is part of Daycry Queues.
+ *
+ * (c) Daycry <daycry9@proton.me>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Daycry\Queues\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use CodeIgniter\HTTP\Response;
 use Config\Services;
-use Daycry\Queues\Exceptions\QueueException;
 use Daycry\Exceptions\Interfaces\BaseExceptionInterface;
+use Daycry\Queues\Exceptions\QueueException;
 use Daycry\Queues\Job;
 use Daycry\Queues\Libraries\Utils;
 use Exception;
 
 class QueueWorkerCommand extends BaseCommand
 {
-    protected $group = 'Queues';
-
-    protected $name = 'queues:worker';
-
+    protected $group       = 'Queues';
+    protected $name        = 'queues:worker';
     protected $description = 'Start queue worker.';
-
-    protected $usage = 'queue:run <queue> [Options]';
-
-    protected $arguments = ['queue' => 'The queue name.'];
-
-    protected $options = [ '--oneTime' => 'Only executes one time.' ];
-
+    protected $usage       = 'queue:run <queue> [Options]';
+    protected $arguments   = ['queue' => 'The queue name.'];
+    protected $options     = ['--oneTime' => 'Only executes one time.'];
     protected bool $locked = false;
 
     protected function earlyChecks(Job $job): void
@@ -44,11 +49,11 @@ class QueueWorkerCommand extends BaseCommand
     {
     }
 
-    public function run(array $params)
+    public function run(array $params): void
     {
         $queue = $params[0] ?? CLI::getOption('queue');
 
-        //CLI::write('Queue "'. $queue .'" started successfully.', 'green');
+        // CLI::write('Queue "'. $queue .'" started successfully.', 'green');
 
         $oneTime = false;
         if (array_key_exists('oneTime', $params) || CLI::getOption('oneTime')) {
@@ -61,7 +66,7 @@ class QueueWorkerCommand extends BaseCommand
         }
         // @codeCoverageIgnoreEnd
 
-        while(true) {
+        while (true) {
             $queues = Utils::parseConfigFile(service('settings')->get('Queue.queues'));
 
             $response = [];
@@ -71,9 +76,9 @@ class QueueWorkerCommand extends BaseCommand
 
             try {
                 $workers = service('settings')->get('Queue.workers');
-                $worker = service('settings')->get('Queue.worker');
+                $worker  = service('settings')->get('Queue.worker');
 
-                if(!array_key_exists($worker, $workers)) {
+                if (! array_key_exists($worker, $workers)) {
                     throw QueueException::forInvalidWorker($worker);
                 }
 
@@ -81,11 +86,11 @@ class QueueWorkerCommand extends BaseCommand
 
                 $job = $worker->watch($queue);
 
-                if(isset($job)) {
+                if (isset($job)) {
                     $this->locked = true;
 
                     $dataJob = $worker->getDataJob();
-                    $j = new Job($dataJob);
+                    $j       = new Job($dataJob);
 
                     $this->earlyChecks($j);
 
@@ -93,53 +98,50 @@ class QueueWorkerCommand extends BaseCommand
 
                     $response['status'] = true;
 
-                    if(!$result instanceof Response) {
+                    if (! $result instanceof Response) {
                         $result = (Services::response(null, true))->setStatusCode(200)->setBody($result);
                     }
 
                     $response['statusCode'] = $result->getStatusCode();
-                    $response['data'] = $result->getBody();
+                    $response['data']       = $result->getBody();
 
                     $this->lateChecks($j);
                 }
-
-            } catch(BaseExceptionInterface $e) {
-
+            } catch (BaseExceptionInterface $e) {
                 $response['statusCode'] = $e->getCode();
-                $response['error'] = $e->getMessage();
-                $response['status'] = false;
+                $response['error']      = $e->getMessage();
+                $response['status']     = false;
                 $worker->removeJob($j, true);
                 $this->showError($e);
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 $response['statusCode'] = $e->getCode();
-                $response['error'] = $e->getMessage();
-                $response['status'] = false;
+                $response['error']      = $e->getMessage();
+                $response['status']     = false;
             }
 
-            if($response && isset($job)) {
+            if ($response && isset($job)) {
                 try {
-                    if($response['status'] === true || $j->getAttempt() >= service('settings')->get('Queue.maxAttempts')) {
+                    if ($response['status'] === true || $j->getAttempt() >= service('settings')->get('Queue.maxAttempts')) {
                         $worker->removeJob($j, false);
                     }
 
-                    //callback
-                    if($cb = $j->getCallback()) {
+                    // callback
+                    if ($cb = $j->getCallback()) {
                         $cb->options->body = $response;
-                        $c = new Job();
+                        $c                 = new Job();
                         $c->url($cb->url, $cb->options);
 
                         $this->earlyCallbackChecks($c);
                         $r = $c->run();
                         $this->lateCallbackChecks($c);
                     }
-
-                } catch(BaseExceptionInterface $e) {
+                } catch (BaseExceptionInterface $e) {
                     $this->showError($e);
                 }
             }
 
             $this->locked = false;
-            $response = [];
+            $response     = [];
             unset($j, $job);
 
             sleep(service('settings')->get('Queue.waitingTimeBetweenJobs'));
