@@ -22,10 +22,9 @@ abstract class BaseQueue
     public function calculateDelay(object $data): void
     {
         if (isset($data->schedule)) {
-            $now      = new DateTime('now');
-            $schedule = new DateTime($data->schedule->date);
+            $now = new DateTime('now');
 
-            $delay = $schedule->getTimestamp() - $now->getTimestamp();
+            $delay = $data->schedule->getTimestamp() - $now->getTimestamp();
 
             $delay = ($delay > 0) ? $delay : 0;
 

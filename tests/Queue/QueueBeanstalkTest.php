@@ -152,6 +152,7 @@ final class QueueBeanstalkTest extends TestCase
         $job = new Job();
         $job->shell($command);
         $job->scheduled($dateTimeObj);
+
         $job->setToDefaultQueue();
         $result = $job->enqueue();
 

@@ -20,8 +20,9 @@ use Daycry\Queues\Exceptions\JobException;
 use Daycry\Queues\Traits\CallableTrait;
 use Daycry\Queues\Traits\EnqueuableTrait;
 use Daycry\Queues\Traits\ExecutableTrait;
+use JsonSerializable;
 
-class Job
+class Job implements JsonSerializable
 {
     use EnqueuableTrait;
     use ExecutableTrait;
@@ -153,9 +154,23 @@ class Job
     public function toObject(): object
     {
         $data = get_object_vars($this);
+
         unset($data['types'], $data['worker']);
 
-        return json_decode(json_encode($data));
+        $data = json_decode(json_encode($data));
+
+        if (isset($data->schedule->date)) {
+            $data->schedule = new DateTime($data->schedule->date, new DateTimeZone($data->schedule->timezone));
+        } else {
+            $data->schedule = null;
+        }
+
+        return $data;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->format('c');
     }
 
     private function _prepareJobOptions(array|object $options = [])

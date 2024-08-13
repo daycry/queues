@@ -57,6 +57,7 @@
         "test": [
             "Composer\\Config::disableProcessTimeout",
             "vendor/bin/phpunit --exclude-group fixtures --coverage-php build/coverage/no-fixtures.cov",
+            "vendor/bin/phpunit --group fixtures --coverage-php build/coverage/fixtures.cov",
             "vendor/bin/phpcov merge --clover build/logs/clover.xml build/coverage --html build/logs/html",
             "@cs"
         ],
