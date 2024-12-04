@@ -18,7 +18,7 @@ use Daycry\Queues\Job;
 
 class SyncQueue extends BaseQueue implements QueueInterface
 {
-    public function enqueue(object $data, string $queue = 'default')
+    public function enqueue(object $data, string $queue = 'default'): mixed
     {
         $job = new Job($data);
 

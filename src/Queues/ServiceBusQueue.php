@@ -37,7 +37,7 @@ class ServiceBusQueue extends BaseQueue implements QueueInterface, WorkerInterfa
         $this->serviceBusHeaders = (new LibrariesServiceBusHeaders())->generateMessageId()->generateSasToken($this->url, $config['issuer'], $config['secret']);
     }
 
-    public function enqueue(object $data, string $queue = 'default')
+    public function enqueue(object $data, string $queue = 'default'): mixed
     {
         $this->calculateDelay($data);
 

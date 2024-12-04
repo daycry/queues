@@ -65,7 +65,7 @@ class RedisQueue extends BaseQueue implements QueueInterface, WorkerInterface
         // $this->queue->brPoping = 0;
     }
 
-    public function enqueue(object $data, string $queue = 'default')
+    public function enqueue(object $data, string $queue = 'default'): mixed
     {
         $this->_options['max_attempts'] = service('settings')->get('Queue.maxAttempts');
 

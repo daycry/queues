@@ -34,7 +34,7 @@ class BeanstalkQueue extends BaseQueue implements QueueInterface, WorkerInterfac
         $this->connection = Pheanstalk::create($config['host'], $config['port']);
     }
 
-    public function enqueue(object $data, string $queue = 'default')
+    public function enqueue(object $data, string $queue = 'default'): mixed
     {
         $tube = new TubeName($queue);
 

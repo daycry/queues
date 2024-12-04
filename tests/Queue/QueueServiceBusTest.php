@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Tests\Queue;
 
-use Angelov\PHPUnitPHPVcr\UseCassette;
 use Config\Services;
 use DateInterval;
 use DateTime;
+use Daycry\PHPUnit\Vcr\Attributes\UseCassette;
 use Daycry\Queues\Job;
 use PHPUnit\Framework\Attributes\Group;
 use Tests\Support\TestCase;

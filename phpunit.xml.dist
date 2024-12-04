@@ -26,7 +26,7 @@
 			<parameter name="time-limit" value="0.50" />
 			<parameter name="report-count" value="30" />
 		</bootstrap>
-		<bootstrap class="\Angelov\PHPUnitPHPVcr\Extension">
+		<bootstrap class="\Daycry\PHPUnit\Vcr\Extension">
           <parameter name="cassettesPath" value="tests/fixtures" />
           <parameter name="storage" value="json" />                                   <!-- https://php-vcr.github.io/documentation/configuration/#storage -->
           <parameter name="libraryHooks" value="stream_wrapper, curl, soap" />        <!-- https://php-vcr.github.io/documentation/configuration/#library-hooks -->

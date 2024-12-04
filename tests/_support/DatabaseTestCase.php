@@ -11,9 +11,16 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Daycry\Queues\Interfaces;
+namespace Tests\Support;
 
-interface QueueInterface
+use CodeIgniter\Test\DatabaseTestTrait;
+
+/**
+ * @internal
+ */
+abstract class DatabaseTestCase extends TestCase
 {
-    public function enqueue(object $data, string $queue = 'default'): mixed;
+    use DatabaseTestTrait;
+
+    protected $namespace;
 }

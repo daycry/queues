@@ -15,6 +15,7 @@ namespace Daycry\Queues\Config;
 
 use CodeIgniter\Config\BaseConfig;
 use Daycry\Queues\Queues\BeanstalkQueue;
+use Daycry\Queues\Queues\DatabaseQueue;
 use Daycry\Queues\Queues\RedisQueue;
 use Daycry\Queues\Queues\ServiceBusQueue;
 use Daycry\Queues\Queues\SyncQueue;
@@ -37,6 +38,7 @@ class Queue extends BaseConfig
         'beanstalk'  => BeanstalkQueue::class,
         'redis'      => RedisQueue::class,
         'serviceBus' => ServiceBusQueue::class,
+        'database'   => DatabaseQueue::class,
     ];
     public array $beanstalk = [
         'host' => '127.0.0.1',
@@ -46,5 +48,9 @@ class Queue extends BaseConfig
         'url'    => '',
         'issuer' => '',
         'secret' => '',
+    ];
+    public array $database = [
+        'group' => null,
+        'table' => 'queues',
     ];
 }
