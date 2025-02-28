@@ -64,7 +64,7 @@ class ServiceBusHeaders
             'sha256',
             $toSign,
             $sasKeyValue,
-            true
+            true,
         )));
 
         $this->authorization = 'SharedAccessSignature sr=' . $targetUri . '&sig=' . $signature . '&se=' . $expires . '&skn=' . $sasKeyName;
