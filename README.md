@@ -4,7 +4,7 @@
 Codeigniter 4 with beanstalk, redis, sync & service bus (azure) queues
 
 [![Build status](https://github.com/daycry/queues/actions/workflows/phpunit.yml/badge.svg?branch=master)](https://github.com/daycry/queues/actions/workflows/phpunit.yml)
-[![Coverage status](https://coveralls.io/repos/github/daycry/queues/badge.svg?branch=master)](https://coveralls.io/github/daycry/queues?branch=master)
+[![PHP Tests](https://github.com/daycry/queues/actions/workflows/phpunit.yml/badge.svg?branch=master)](https://github.com/daycry/queues/actions/workflows/phpunit.yml)
 [![Downloads](https://poser.pugx.org/daycry/queues/downloads)](https://packagist.org/packages/daycry/queues)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/daycry/queues)](https://packagist.org/packages/daycry/queues)
 [![GitHub stars](https://img.shields.io/github/stars/daycry/queues)](https://packagist.org/packages/daycry/queues)
