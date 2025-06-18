@@ -19,6 +19,7 @@ use DateTime;
 use Daycry\Queues\Exceptions\QueueException;
 use Daycry\Queues\Job;
 use stdClass;
+use Tests\Support\Classes\Example;
 use Tests\Support\TestCase;
 
 /**
@@ -51,7 +52,7 @@ final class QueueSyncTest extends TestCase
     public function testClasses(): void
     {
         $job = new Job();
-        $job->classes(\Tests\Support\Classes\Example::class, 'run', ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]);
+        $job->classes(Example::class, 'run', ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]);
         $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' => ['X-API-KEY' => '1234']]);
         $result = $job->enqueue('default');
 

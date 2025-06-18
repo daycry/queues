@@ -19,6 +19,7 @@ use DateTime;
 use Daycry\PHPUnit\Vcr\Attributes\UseCassette;
 use Daycry\Queues\Job;
 use PHPUnit\Framework\Attributes\Group;
+use Tests\Support\Classes\Example;
 use Tests\Support\TestCase;
 
 /**
@@ -69,7 +70,7 @@ final class QueueServiceBusTest extends TestCase
         $this->injectMockQueueWorker('serviceBus');
 
         $job = new Job();
-        $job->classes(\Tests\Support\Classes\Example::class, 'run', ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]);
+        $job->classes(Example::class, 'run', ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]);
         $job->setCallback('https://httpbin.org/post', ['method' => 'post', 'headers' => ['X-API-KEY' => '1234']]);
         $result = $job->enqueue('dummy');
 

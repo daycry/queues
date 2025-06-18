@@ -17,6 +17,7 @@ use DateTime;
 use Daycry\Queues\Exceptions\JobException;
 use Daycry\Queues\Job;
 use stdClass;
+use Tests\Support\Classes;
 use Tests\Support\TestCase;
 
 /**
@@ -113,7 +114,7 @@ final class JobTest extends TestCase
 
     public function testClasses(): void
     {
-        $command = json_decode(json_encode(['class' => \Tests\Support\Classes::class, 'method' => 'run', 'options' => ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]]));
+        $command = json_decode(json_encode(['class' => Classes::class, 'method' => 'run', 'options' => ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]]));
 
         $objectExpected           = new stdClass();
         $objectExpected->type     = 'classes';
@@ -124,7 +125,7 @@ final class JobTest extends TestCase
         $objectExpected->queue    = null;
 
         $job = new Job();
-        $job->classes(\Tests\Support\Classes::class, 'run', ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]);
+        $job->classes(Classes::class, 'run', ['constructor' => 'Contructor', 'method' => ['param1' => 1, 'param2' => 2]]);
 
         $this->assertSame('classes', $job->getType());
         $this->assertJsonStringEqualsJsonString(json_encode($objectExpected), json_encode($job->toObject()));
